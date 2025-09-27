@@ -519,6 +519,50 @@
             <div class="result">
                 Θ(V) = <span class="value" id="theta-result">0.00</span>
             </div>
+<div class="insight" id="sec2-quick-guide">
+  <h3>Quick Guide — Coordinate Invariance of Θ</h3>
+  <ul>
+    <li><strong>Definition:</strong> 
+      $\,\Theta_{(x,p)}(V)=p(\pi_*V)=p_i\,dx^i(V)\,$
+    </li>
+    <li><strong>Change of coordinates:</strong> 
+      $\,\tilde x^i=f^i(x)$ with Jacobian 
+      $\,J^i{}_j=\dfrac{\partial\tilde x^i}{\partial x^j}\,$
+    </li>
+    <li><strong>Transformation laws:</strong> 
+      $\,d\tilde x^i=J^i{}_j\,dx^j,\qquad 
+      \tilde p_i=p_j\,(J^{-1})^j{}_i\,$
+    </li>
+    <li><strong>Invariance:</strong> 
+      $\,\tilde p_i\,d\tilde x^i
+      =p_j\,(J^{-1})^j{}_i\,J^i{}_k\,dx^k
+      =p_k\,dx^k\,$
+    </li>
+    <li><strong>1D check (this panel):</strong> 
+      $\,J=\dfrac{d\tilde x}{dx},\ \tilde p=\dfrac{p}{J},\ 
+      d\tilde x(V)=J\,dx(V)\ \Rightarrow\ 
+      \Theta(V)=\tilde\Theta(V)\,$
+    </li>
+  </ul>
+</div>
+<div class="insight" id="notes-2">
+  <h3>Direct Algebraic Verification</h3>
+  <p>From Section 1, we have the transformation laws:</p>
+  <div class="math-display">
+    $$\tilde{p}_i = p_j \frac{\partial x^j}{\partial \tilde{x}^i}, \quad d\tilde{x}^i = \frac{\partial \tilde{x}^i}{\partial x^k} dx^k$$
+  </div>
+  <p>Substituting into the transformed 1-form:</p>
+  <div class="math-display">
+    $$\begin{aligned}
+    \tilde{p}_i d\tilde{x}^i &= \left(p_j \frac{\partial x^j}{\partial \tilde{x}^i}\right) \left(\frac{\partial \tilde{x}^i}{\partial x^k} dx^k\right) \\
+    &= p_j \left(\frac{\partial x^j}{\partial \tilde{x}^i} \frac{\partial \tilde{x}^i}{\partial x^k}\right) dx^k \\
+    &= p_j \delta^j_k dx^k \quad \text{(chain rule)} \\
+    &= p_j dx^j \\
+    &= p_i dx^i
+    \end{aligned}$$
+  </div>
+  <p>This proves the coordinate invariance of the canonical 1-form Θ.</p>
+</div>
         </div>
 
         <!-- Section 3: Hamiltonian Dynamics -->
@@ -875,163 +919,184 @@ ctx2.stroke();
             draw();
         })();
 
-        // Part 2: Canonical 1-form
-        (function() {
-            const ctx1 = setupCanvas('viz-2a');
-            const ctx2 = setupCanvas('viz-2b');
-            
-            function draw() {
-                const angle = parseFloat(document.getElementById('ctrl-2-angle').value) * Math.PI / 180;
-                const phase = parseFloat(document.getElementById('ctrl-2-phase').value);
-                
-                document.getElementById('val-2-angle').textContent = (angle * 180 / Math.PI).toFixed(0) + '°';
-                document.getElementById('val-2-phase').textContent = phase.toFixed(0);
-                
-                const canvas1 = ctx1.canvas;
-                const canvas2 = ctx2.canvas;
-                const w1 = canvas1.width / (window.devicePixelRatio || 1);
-                const h1 = canvas1.height / (window.devicePixelRatio || 1);
-                const w2 = canvas2.width / (window.devicePixelRatio || 1);
-                const h2 = canvas2.height / (window.devicePixelRatio || 1);
-                
-                ctx1.clearRect(0, 0, w1, h1);
-                ctx2.clearRect(0, 0, w2, h2);
-                
-                // Visualization 1: How Theta acts
-                ctx1.save();
-                ctx1.translate(w1/2, h1/2);
-                
-                // Draw T*Q structure
-                ctx1.strokeStyle = getColor('glass-border');
-                ctx1.lineWidth = 1;
-                
-                // Base manifold Q
-                ctx1.beginPath();
-                ctx1.moveTo(-180, 100);
-                ctx1.lineTo(180, 100);
-                ctx1.stroke();
-                
-                // Fibers
-                for (let x = -150; x <= 150; x += 50) {
-                    ctx1.strokeStyle = 'rgba(255,255,255,0.1)';
-                    ctx1.beginPath();
-                    ctx1.moveTo(x, 100);
-                    ctx1.lineTo(x, -150);
-                    ctx1.stroke();
-                }
-                
-                // Phase space point (x,p)
-                const x = phase * 2 - 100;
-                const p = 80;
-                
-                ctx1.fillStyle = getColor('accent-yellow');
-                ctx1.beginPath();
-                ctx1.arc(x, -p, 6, 0, 2 * Math.PI);
-                ctx1.fill();
-                
-                // Tangent vector V
-                const vx = 70 * Math.cos(angle);
-                const vy = 70 * Math.sin(angle);
-                
-                ctx1.strokeStyle = getColor('accent-blue');
-                ctx1.lineWidth = 3;
-                ctx1.beginPath();
-                ctx1.moveTo(x, -p);
-                ctx1.lineTo(x + vx, -p + vy);
-                ctx1.stroke();
-                
-                // Draw arrow
-                ctx1.save();
-                ctx1.translate(x + vx, -p + vy);
-                ctx1.rotate(Math.atan2(vy, vx));
-                ctx1.fillStyle = getColor('accent-blue');
-                ctx1.beginPath();
-                ctx1.moveTo(0, 0);
-                ctx1.lineTo(-8, 4);
-                ctx1.lineTo(-8, -4);
-                ctx1.fill();
-                ctx1.restore();
-                
-                // Projection to Q
-                ctx1.strokeStyle = getColor('accent-green');
-                ctx1.lineWidth = 2;
-                ctx1.setLineDash([5, 5]);
-                ctx1.beginPath();
-                ctx1.moveTo(x, -p);
-                ctx1.lineTo(x, 100);
-                ctx1.stroke();
-                ctx1.setLineDash([]);
-                
-                ctx1.strokeStyle = getColor('accent-green');
-                ctx1.lineWidth = 3;
-                ctx1.beginPath();
-                ctx1.moveTo(x, 100);
-                ctx1.lineTo(x + vx, 100);
-                ctx1.stroke();
-                
-                // Labels
-                ctx1.fillStyle = getColor('text-primary');
-                ctx1.font = '12px monospace';
-                ctx1.fillText('(x,p)', x + 10, -p);
-                ctx1.fillText('V', x + vx + 10, -p + vy);
-                ctx1.fillText('π₊V', x + vx + 10, 105);
-                ctx1.fillText('Q', -175, 95);
-                
-                // Calculate Theta(V)
-                const thetaValue = (p * vx) / 100;
-                document.getElementById('theta-result').textContent = thetaValue.toFixed(3);
-                
-                ctx1.restore();
-                
-                // Visualization 2: Coordinate invariance animation
-                ctx2.save();
-                ctx2.translate(w2/2, h2/2);
-                
-                const time = Date.now() / 2000;
-                
-                // Rotating coordinate systems
-                for (let rot = 0; rot < Math.PI * 2; rot += Math.PI / 3) {
-                    ctx2.save();
-                    ctx2.rotate(rot + time * 0.5);
-                    
-                    ctx2.strokeStyle = `rgba(66, 133, 244, ${0.3 + 0.2 * Math.sin(time + rot)})`;
-                    ctx2.lineWidth = 1;
-                    
-                    // Grid
-                    for (let i = -3; i <= 3; i++) {
-                        ctx2.beginPath();
-                        ctx2.moveTo(i * 40, -120);
-                        ctx2.lineTo(i * 40, 120);
-                        ctx2.stroke();
-                        ctx2.beginPath();
-                        ctx2.moveTo(-120, i * 40);
-                        ctx2.lineTo(120, i * 40);
-                        ctx2.stroke();
-                    }
-                    
-                    // Show invariant form
-                    ctx2.fillStyle = `rgba(251, 188, 4, ${0.3 + 0.2 * Math.sin(time + rot)})`;
-                    ctx2.fillRect(-30, -60, 60, 20);
-                    
-                    ctx2.restore();
-                }
-                
-                // Central text
-                ctx2.fillStyle = getColor('text-primary');
-                ctx2.font = '16px monospace';
-                ctx2.textAlign = 'center';
-                ctx2.fillText('Θ invariant', 0, 150);
-                
-                ctx2.restore();
-                
-                requestAnimationFrame(draw);
-            }
-            
-            document.getElementById('ctrl-2-angle').addEventListener('input', draw);
-            document.getElementById('ctrl-2-phase').addEventListener('input', draw);
-            
-            draw();
-        })();
+        // Part 2: Canonical 1-form  — upgraded right panel (numeric invariance check)
+(function () {
+  const ctx1 = setupCanvas('viz-2a');
+  const ctx2 = setupCanvas('viz-2b');
+
+  // small linear-algebra helpers (2×2)
+  function mat(a,b,c,d){ return [[a,b],[c,d]]; }
+  function mul(A,v){ return [A[0][0]*v[0] + A[0][1]*v[1], A[1][0]*v[0] + A[1][1]*v[1]]; }
+  function invT(A){
+    const [a,b] = A[0], [c,d] = A[1];
+    const det = a*d - b*c;
+    // (A^{-1})^T = 1/det * [[d, -c], [-b, a]]
+    return [[ d/det, -c/det],
+            [-b/det,  a/det]];
+  }
+  function rotScale(alpha, sigma){
+    const c = Math.cos(alpha), s = Math.sin(alpha);
+    // J = sigma * R(alpha)
+    return mat(sigma*c, -sigma*s, sigma*s, sigma*c);
+  }
+  function draw() {
+    // read your existing sliders (unchanged UI)
+    const angle = parseFloat(document.getElementById('ctrl-2-angle').value) * Math.PI / 180;
+    const phase = parseFloat(document.getElementById('ctrl-2-phase').value);
+
+    document.getElementById('val-2-angle').textContent = (angle * 180 / Math.PI).toFixed(0) + '°';
+    document.getElementById('val-2-phase').textContent = phase.toFixed(0);
+
+    const w1 = ctx1.canvas.width / (window.devicePixelRatio || 1);
+    const h1 = ctx1.canvas.height / (window.devicePixelRatio || 1);
+    const w2 = ctx2.canvas.width / (window.devicePixelRatio || 1);
+    const h2 = ctx2.canvas.height / (window.devicePixelRatio || 1);
+
+    ctx1.clearRect(0, 0, w1, h1);
+    ctx2.clearRect(0, 0, w2, h2);
+
+    // ---------- LEFT PANEL (unchanged): Θ acting on vectors ----------
+    ctx1.save();
+    ctx1.translate(w1/2, h1/2);
+
+    // base line Q
+    ctx1.strokeStyle = getColor('glass-border');
+    ctx1.lineWidth = 1;
+    ctx1.beginPath();
+    ctx1.moveTo(-180, 100);
+    ctx1.lineTo(180, 100);
+    ctx1.stroke();
+
+    // fibers
+    for (let x = -150; x <= 150; x += 50) {
+      ctx1.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx1.beginPath(); ctx1.moveTo(x, 100); ctx1.lineTo(x, -150); ctx1.stroke();
+    }
+
+    const x = phase * 2 - 100;   // [-100,100]
+    const p = 80;                 // momentum magnitude (your existing scale)
+    ctx1.fillStyle = getColor('accent-yellow');
+    ctx1.beginPath(); ctx1.arc(x, -p, 6, 0, 2*Math.PI); ctx1.fill();
+
+    const vx = 70 * Math.cos(angle);
+    const vy = 70 * Math.sin(angle);
+
+    // tangent vector V
+    ctx1.strokeStyle = getColor('accent-blue');
+    ctx1.lineWidth = 3;
+    ctx1.beginPath(); ctx1.moveTo(x, -p); ctx1.lineTo(x + vx, -p + vy); ctx1.stroke();
+    ctx1.save();
+    ctx1.translate(x + vx, -p + vy);
+    ctx1.rotate(Math.atan2(vy, vx));
+    ctx1.fillStyle = getColor('accent-blue');
+    ctx1.beginPath(); ctx1.moveTo(0, 0); ctx1.lineTo(-8, 4); ctx1.lineTo(-8, -4); ctx1.fill();
+    ctx1.restore();
+
+    // projection π_*V to Q
+    ctx1.strokeStyle = getColor('accent-green');
+    ctx1.lineWidth = 2;
+    ctx1.setLineDash([5,5]);
+    ctx1.beginPath(); ctx1.moveTo(x, -p); ctx1.lineTo(x, 100); ctx1.stroke();
+    ctx1.setLineDash([]);
+    ctx1.beginPath(); ctx1.moveTo(x, 100); ctx1.lineTo(x + vx, 100); ctx1.stroke();
+
+    // labels
+    ctx1.fillStyle = getColor('text-primary');
+    ctx1.font = '12px monospace';
+    ctx1.fillText('(x,p)', x + 10, -p);
+    ctx1.fillText('V',     x + vx + 10, -p + vy);
+    ctx1.fillText('π_*V',  x + vx + 10, 105);
+    ctx1.fillText('Q', -175, 95);
+
+    // your original Θ(V) readout (kept consistent with your scaling)
+    const thetaLeft = (p * vx) / 100;
+    document.getElementById('theta-result').textContent = thetaLeft.toFixed(3);
+
+    ctx1.restore();
+
+    // ---------- RIGHT PANEL: numeric verification p·dx = p~·dx~ ----------
+    ctx2.save();
+    ctx2.translate(w2/2, h2/2);
+
+    // animated coordinate change  x̃ = J x  with  J = σ R(α)
+    const t = Date.now() / 1200;
+    const alpha = 0.9 * Math.sin(t);                 // rotation
+    const sigma = 1.2 + 0.3 * Math.sin(0.7 * t);     // isotropic scale
+    const J = rotScale(alpha, sigma);
+    const JinvT = invT(J);
+
+    // draw original axes (blue)
+    ctx2.strokeStyle = getColor('accent-blue');
+    ctx2.lineWidth = 2; ctx2.globalAlpha = 0.9;
+    ctx2.beginPath(); ctx2.moveTo(-150, 0); ctx2.lineTo(150, 0); ctx2.stroke();
+    ctx2.beginPath(); ctx2.moveTo(0, -150); ctx2.lineTo(0, 150); ctx2.stroke();
+    ctx2.globalAlpha = 1;
+    ctx2.fillStyle = getColor('accent-blue');
+    ctx2.font = '12px monospace';
+    ctx2.fillText('x¹', 155, 5); ctx2.fillText('x²', 5, -155);
+
+    // draw transformed axes (red)
+    const e1 = [1,0], e2 = [0,1];
+    const Je1 = mul(J, e1), Je2 = mul(J, e2);
+    ctx2.strokeStyle = getColor('accent-red'); ctx2.lineWidth = 2; ctx2.globalAlpha = 0.8;
+    ctx2.beginPath(); ctx2.moveTo(-150*Je1[0], 150*Je1[1]); ctx2.lineTo(150*Je1[0], -150*Je1[1]); ctx2.stroke();
+    ctx2.beginPath(); ctx2.moveTo(-150*Je2[0], 150*Je2[1]); ctx2.lineTo(150*Je2[0], -150*Je2[1]); ctx2.stroke();
+    ctx2.globalAlpha = 1;
+    ctx2.fillStyle = getColor('accent-red');
+    ctx2.fillText('x̃¹', 150*Je1[0] + 5, -150*Je1[1] + 5);
+    ctx2.fillText('x̃²', 150*Je2[0] + 5, -150*Je2[1] + 5);
+
+    // choose the same data you used on the left (same units so numbers match your Θ(V) display):
+    // covector components p = (p, 0), projected vector π_*V = (vx, 0)
+    const pVec = [p, 0];
+    const dxVec = [vx, 0];
+
+    // original Θ = p · dx  (scaled like your left readout: divide by 100)
+    const thetaOrig = (pVec[0]*dxVec[0] + pVec[1]*dxVec[1]) / 100;
+
+    // transformed data:
+    //  vectors by J, covectors by (J^{-1})^T
+    const pTilde  = mul(JinvT, pVec);
+    const dxTilde = mul(J,    dxVec);
+    const thetaTilde = (pTilde[0]*dxTilde[0] + pTilde[1]*dxTilde[1]) / 100;
+
+    // draw the two vectors (blue in original frame, red in transformed frame)
+    const disp = 0.6; // on-canvas display scale
+    // original dx (blue)
+    ctx2.strokeStyle = getColor('accent-blue'); ctx2.lineWidth = 3;
+    ctx2.beginPath(); ctx2.moveTo(0,0); ctx2.lineTo(disp*dxVec[0], -disp*dxVec[1]); ctx2.stroke();
+
+    // transformed dx~ (red)
+    ctx2.strokeStyle = getColor('accent-red'); ctx2.lineWidth = 3;
+    ctx2.beginPath(); ctx2.moveTo(0,0); ctx2.lineTo(disp*dxTilde[0], -disp*dxTilde[1]); ctx2.stroke();
+
+    // info panel
+    const diff = Math.abs(thetaOrig - thetaTilde);
+    ctx2.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx2.fillRect(-170, 60, 340, 92);
+    ctx2.strokeStyle = getColor('glass-border'); ctx2.strokeRect(-170, 60, 340, 92);
+
+    ctx2.fillStyle = getColor('text-primary'); ctx2.font = '12px monospace'; ctx2.textAlign = 'left';
+    ctx2.fillText(`Original:   Θ = ${thetaOrig.toFixed(6)}`,  -160,  85);
+    ctx2.fillText(`Transformed Θ̃ = ${thetaTilde.toFixed(6)}`, -160, 105);
+    ctx2.fillText(`|Θ−Θ̃| = ${diff.toExponential(2)}`,         -160, 125);
+
+    ctx2.textAlign = 'center'; ctx2.font = 'bold 14px monospace';
+    if (diff < 1e-10) {
+      ctx2.fillStyle = getColor('accent-green'); ctx2.fillText('✓ INVARIANT', 0, 140);
+    } else {
+      ctx2.fillStyle = getColor('accent-red');   ctx2.fillText('✗ ERROR', 0, 140);
+    }
+
+    ctx2.restore();
+
+    requestAnimationFrame(draw);
+  }
+
+  document.getElementById('ctrl-2-angle').addEventListener('input', draw);
+  document.getElementById('ctrl-2-phase').addEventListener('input', draw);
+  draw();
+})();
 
         // Part 3: Hamiltonian Flow
         (function() {
