@@ -422,16 +422,19 @@
         <div class="section" data-section-id="1">
             <div class="section-header">
                 <span class="section-number">1</span>
-                <h2>Contravariant Transformation of Momenta</h2>
+                <h2>Coordinate Transformation of Conjugate Momenta</h2>
             </div>
 
             <div class="math-display">
-                $$\text{Given: } \tilde{x} = f(x) \quad \Rightarrow \quad \tilde{p}_i = p_j \frac{\partial x^j}{\partial \tilde{x}^i}$$
-            </div>
-
+  $$\textbf{Given: }\ \tilde{x}=f(x)\ \text{ with Jacobian }\ 
+    J^i{}_{j}=\frac{\partial \tilde{x}^i}{\partial x^j}$$
+  $$\textbf{Covector transformation (contragredient) law: }\ 
+    \tilde{p}_i = p_j\,(J^{-1})^j{}_{i}
+    = p_j\,\frac{\partial x^j}{\partial \tilde{x}^i}$$
+</div>
             <div class="insight">
                 <h3>The Duality Principle</h3>
-                <p>When position coordinates transform by a matrix $A$, momentum coordinates transform by $(A^{-1})^T$. This contravariant behavior ensures that the fundamental pairing $p \cdot dx$ remains invariant—a cornerstone of Hamiltonian mechanics.</p>
+                <p>When position coordinates transform by a matrix $A$, momentum coordinates transform by $(A^{-1})^T$. This inverse–transpose behaviour ensures that the fundamental pairing $p \cdot dx$ remains invariant: a cornerstone of Hamiltonian mechanics.</p>
             </div>
 
             <div class="viz-container">
@@ -451,7 +454,7 @@
                     <input type="range" id="ctrl-1-theta" min="-90" max="90" value="0">
                 </div>
                 <div class="control-group">
-                    <label>Shear s: <span id="val-1-shear">0.00</span></label>
+                    <label>x-shear k: <span id="val-1-shear">0.00</span></label>
                     <input type="range" id="ctrl-1-shear" min="-100" max="100" value="0">
                 </div>
                 <div class="control-group">
@@ -459,6 +462,20 @@
                     <input type="range" id="ctrl-1-scale" min="50" max="200" value="100">
                 </div>
             </div>
+<div class="insight" id="notes-1">
+  <h3>Quick Guide</h3>
+  <ul style="margin-top:0.25rem">
+    <li><strong>What changes:</strong> coordinates transform by the Jacobian 
+      $J^i{}_j=\dfrac{\partial \tilde{x}^i}{\partial x^j}$ (rotate / scale / shear)
+    </li>
+    <li><strong>What co-changes:</strong> covectors (momenta) transform by the inverse transpose:
+      $\ \tilde p_i = p_j\,(J^{-1})^j{}_i$
+    </li>
+    <li><strong>Why:</strong> to keep the canonical pairing $p_i\,dx^i$ invariant:
+      $$p_i\,dx^i=\tilde p_i\,d\tilde x^i \quad\Longleftrightarrow\quad \tilde p_i = p_j\,(J^{-1})^j{}_i$$
+    </li>
+  </ul>
+</div>
         </div>
 
         <!-- Section 2: Canonical 1-form -->
@@ -765,7 +782,7 @@
                 
                 ctx1.restore();
                 
-                // Cotangent space (contravariant transformation)
+                // Cotangent space (inverse–transpose)
                 ctx2.save();
                 ctx2.translate(w2/2, h2/2);
                 
@@ -785,14 +802,13 @@
                 }
                 ctx2.globalAlpha = 1;
                 
-                // Contravariant transformation (inverse transpose)
+                // Contragredient transformation (inverse transpose)
                 ctx2.save();
-                const det = scale * scale * (1 - shear * Math.sin(theta) * Math.cos(theta));
-                const invScale = 1 / scale;
+        	const invScale = 1 / scale;  
                 
-                ctx2.rotate(-theta);
+                ctx2.rotate(theta);
                 ctx2.scale(invScale, invScale);
-                ctx2.transform(1, 0, -shear, 1, 0, 0);
+                ctx2.transform(1, -shear, 0, 1, 0, 0);
                 
                 ctx2.strokeStyle = getColor('accent-red');
                 ctx2.lineWidth = 1.5;
@@ -817,20 +833,28 @@
                     ctx2.lineWidth = 2;
                     ctx2.beginPath();
                     ctx2.moveTo(0, 0);
-                    ctx2.lineTo(px, py);
+                    ctx2.lineTo(px, -py);
                     ctx2.stroke();
                     
-                    // Transformed (contravariant)
-                    const c = Math.cos(-theta);
-                    const s = Math.sin(-theta);
-                    const px_new = invScale * (c * px - s * py - shear * py);
-                    const py_new = invScale * (s * px + c * py);
-                    
-                    ctx2.strokeStyle = getColor('accent-red');
-                    ctx2.beginPath();
-                    ctx2.moveTo(0, 0);
-                    ctx2.lineTo(px_new, py_new);
-                    ctx2.stroke();
+                    // Transformed by (J^{-1})^T = R(+θ) · S(1/σ) · [[1,0],[-k,1]]
+// 1) y-shear with −k
+let qx = px;
+let qy = -shear * px + py;
+
+// 2) scale by 1/σ
+qx *= invScale;
+qy *= invScale;
+
+// 3) rotate by +θ
+const c = Math.cos(theta), s = Math.sin(theta);
+const px_new = c * qx - s * qy;
+const py_new = s * qx + c * qy;
+
+ctx2.strokeStyle = getColor('accent-red');
+ctx2.beginPath();
+ctx2.moveTo(0, 0);
+ctx2.lineTo(px_new, -py_new);
+ctx2.stroke();
                 });
                 
                 // Labels
