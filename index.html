@@ -385,6 +385,37 @@
             to { transform: rotate(360deg); }
         }
     </style>
+<style>
+  /* Part 4 clean layout */
+  #pb4 #pb4-geo { height: 420px; }
+  #pb4 #pb4-vectors { height: 300px; }
+
+  .pb4-legend{
+    display:flex; flex-wrap:wrap; gap:.5rem; padding:.75rem 1rem .25rem;
+    border-bottom:1px solid var(--glass-border); background:var(--bg-tertiary);
+  }
+
+  .chip{
+    display:inline-block; padding:.25rem .6rem; border-radius:999px;
+    font-size:.8rem; letter-spacing:.3px; border:1px solid var(--glass-border);
+    background:var(--glass);
+  }
+  .chip-blue   { border-color: rgba(66,133,244,.5); box-shadow: 0 0 10px rgba(66,133,244,.12) inset; }
+  .chip-green  { border-color: rgba(52,168,83,.5);  box-shadow: 0 0 10px rgba(52,168,83,.12) inset; }
+  .chip-violet { border-color: rgba(179,136,255,.5);box-shadow: 0 0 10px rgba(179,136,255,.12) inset; }
+  .chip-amber  { border-color: rgba(251,188,4,.5);  box-shadow: 0 0 10px rgba(251,188,4,.12) inset; }
+
+  .kpi-grid{
+    display:grid; grid-template-columns: 1fr auto; gap:10px 16px;
+    padding:1rem 1.25rem; background: var(--bg-tertiary);
+    border-top:1px solid var(--glass-border); border-bottom:1px solid var(--glass-border);
+  }
+  .kpi-grid > div:nth-child(2n){
+    text-align:right; font-family: "Courier New", monospace; color: var(--accent-green);
+  }
+
+  .mini-line{ margin-top:.35rem; font-family:"Courier New", monospace; }
+</style>
 </head>
 <body>
     <!-- Loading screen -->
@@ -638,7 +669,7 @@
 </div>
 
 <div class="insight" id="sec3-insight">
-  <h3>Quick Guide — Why $\mathcal{L}_{X_H}\omega = 0$ and $\mathcal{L}_{X_H}H = 0$</h3>
+  <h3>Quick Guide: Why $\mathcal{L}_{X_H}\omega = 0$ and $\mathcal{L}_{X_H}H = 0$</h3>
 
   <p style="margin-top:.5rem">
     <strong>Cartan’s formula:</strong> $\ \mathcal{L}_{X_H}\omega = d\!\left(i_{X_H}\omega\right)+i_{X_H}(d\omega)$.
@@ -663,58 +694,151 @@
   </p>
 </div>
 
-        <!-- Section 4: Poisson Bracket -->
-        <div class="section" data-section-id="4">
-            <div class="section-header">
-                <span class="section-number">4</span>
-                <h2>The Poisson Bracket Algebra</h2>
-            </div>
+       <!-- Section 4: Poisson Bracket -->
+<div class="section" data-section-id="4">
+  <div class="section-header">
+    <span class="section-number">4</span>
+    <h2>The Poisson Bracket Algebra</h2>
+  </div>
 
-            <div class="math-display">
-                $$\{f,g\} = \sum_{i=1}^n \left(\frac{\partial f}{\partial x^i}\frac{\partial g}{\partial p_i} - \frac{\partial f}{\partial p_i}\frac{\partial g}{\partial x^i}\right)$$
-            </div>
+  <!-- Box 1: definition + Hamiltonian vector field (coordinate-free first) -->
+  <div class="math-display">
+    $$\textbf{Convention:}\quad i_{X_f}\omega=-\,df,\qquad
+      \omega=\sum_{i=1}^n dp_i\wedge dx^i$$
 
-            <div class="insight">
-                <h3>The Lie Algebra of Observables</h3>
-                <p>The Poisson bracket turns smooth functions into a Lie algebra. The Jacobi identity $\{\{f,g\},h\} + \{\{g,h\},f\} + \{\{h,f\},g\} = 0$ encodes the consistency of infinitesimal symmetries. This algebraic structure bridges classical and quantum mechanics.</p>
-            </div>
+    $$\Rightarrow\quad
+      \omega(X_f,\cdot)=-\,df(\cdot),\qquad
+      \{f,g\}:=X_g(f)=-\,X_f(g)=-\,\omega(X_f,X_g)$$
 
-            <div class="viz-container">
-                <div class="viz-panel">
-                    <div class="viz-title">Bracket Geometry</div>
-                    <canvas id="viz-4a"></canvas>
-                </div>
-                <div class="viz-panel">
-                    <div class="viz-title">Jacobi Identity</div>
-                    <canvas id="viz-4b"></canvas>
-                </div>
-            </div>
+    $$\text{Canonical coordinates:}\quad
+      X_f=\sum_{i=1}^n\!\left(
+        \frac{\partial f}{\partial p_i}\,\partial_{x^i}
+        -\frac{\partial f}{\partial x^i}\,\partial_{p_i}
+      \right)$$
+  </div>
 
-            <div class="controls">
-                <div class="control-group">
-                    <label>Observable f</label>
-                    <select id="ctrl-4-f" class="button" style="width: 100%;">
-                        <option value="x">Position x</option>
-                        <option value="p">Momentum p</option>
-                        <option value="L">Angular Momentum L = xp_y - yp_x</option>
-                        <option value="H">Energy H</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Observable g</label>
-                    <select id="ctrl-4-g" class="button" style="width: 100%;">
-                        <option value="p">Momentum p</option>
-                        <option value="x">Position x</option>
-                        <option value="L">Angular Momentum L</option>
-                        <option value="H">Energy H</option>
-                    </select>
-                </div>
-            </div>
+  <!-- Box 2: coordinate formula + assignment-style identities -->
+  <div class="insight">
+    <h3>Quick Guide</h3>
 
-            <div class="result">
-                {f, g} = <span class="value" id="bracket-result">1</span>
-            </div>
+    <div class="math-display" style="margin-top:.5rem">
+      $$\{f,g\}=\sum_{i=1}^n\!\left(
+          \frac{\partial f}{\partial x^i}\frac{\partial g}{\partial p_i}
+          -\frac{\partial f}{\partial p_i}\frac{\partial g}{\partial x^i}
+        \right),
+        \qquad \{x^i,p_j\}=\delta^i{}_j$$
+    </div>
+
+    <div class="math-display" style="margin-top:.75rem">
+  $$
+  \begin{aligned}
+  \text{Jacobi identity (cyclic expression):}\quad
+  &\{f,\{g,h\}\}+\{g,\{h,f\}\}+\{h,\{f,g\}\}=0\\[6pt]
+  \text{Anti-homomorphism:}\quad
+  &X_{\{f,g\}}=-\,[X_f,X_g]
+  \end{aligned}
+  $$
+</div>
+
+
+ <!-- ======== PART 4 (clean rebuild) ======== -->
+<div class="viz-container" id="pb4">
+  <!-- LEFT: geometry -->
+  <div class="viz-panel">
+    <div class="viz-title">Level Sets of f & Field X_g</div>
+    <canvas id="pb4-geo"></canvas>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>f(x,p)</label>
+        <select id="pb4-f" class="button" style="width:100%">
+          <option value="x">x</option>
+          <option value="p">p</option>
+          <option value="xp">x·p</option>
+          <option value="Hx">H = ½(p² + x²)</option>
+          <option value="x2">½ x²</option>
+          <option value="p2">½ p²</option>
+          <option value="sinx">sin x</option>
+          <option value="cosx">cos x</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>g(x,p)</label>
+        <select id="pb4-g" class="button" style="width:100%">
+          <option value="p">p</option>
+          <option value="x">x</option>
+          <option value="xp">x·p</option>
+          <option value="Hx">H = ½(p² + x²)</option>
+          <option value="x2">½ x²</option>
+          <option value="p2">½ p²</option>
+          <option value="sinx">sin x</option>
+          <option value="cosx">cos x</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: vector lab (single canvas, external legend, tidy KPIs) -->
+  <div class="viz-panel">
+    <div class="viz-title">Vector Lab at (x₀,p₀)</div>
+    <div class="pb4-legend">
+      <span class="chip chip-blue">X_f</span>
+      <span class="chip chip-green">X_g</span>
+      <span class="chip chip-violet">X_{ {f,g} }</span>
+      <span class="chip chip-amber">±[X_f, X_g]</span>
+    </div>
+    <canvas id="pb4-vectors"></canvas>
+
+    <div class="kpi-grid">
+      <div>Skew {f,g}+{g,f}</div>              <div id="pb4-skew">—</div>
+      <div>Jacobi residual J(f,g,h)</div>      <div id="pb4-jacobi">—</div>
+      <div>Homomorphism ‖X_{ {f,g} } ∓ [X_f,X_g]‖</div> <div id="pb4-homo">—</div>
+      <div>Coordinate invariance |{f,g} − {f̃,g̃}|</div> <div id="pb4-inv">—</div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>h(x,p)</label>
+        <select id="pb4-h" class="button" style="width:100%">
+          <option value="Hx">H = ½(p² + x²)</option>
+          <option value="x">x</option>
+          <option value="p">p</option>
+          <option value="xp">x·p</option>
+          <option value="x2">½ x²</option>
+          <option value="p2">½ p²</option>
+          <option value="sinx">sin x</option>
+          <option value="cosx">cos x</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Evaluation point (x₀, p₀)</label>
+        <input type="range" id="pb4-x0" min="-200" max="200" value="60">
+        <input type="range" id="pb4-p0" min="-200" max="200" value="80">
+        <div class="mini-line">
+          x₀ = <span id="pb4-x0-val">0.60</span>, p₀ = <span id="pb4-p0-val">0.80</span>
         </div>
+      </div>
+
+      <div class="control-group">
+        <label>Scaling (cotangent lift):  x̃ = σ x ,  p̃ = p/σ</label>
+        <input type="range" id="pb4-sigma" min="20" max="200" value="130">
+        <div class="mini-line">σ = <span id="pb4-sigma-val">1.30</span></div>
+      </div>
+
+      <div class="control-group">
+        <label>Poisson convention</label>
+        <button id="pb4-conv" class="button" title="Toggle Poisson sign">
+          Current: {f,g} = ∂f/∂x ∂g/∂p − ∂f/∂p ∂g/∂x
+        </button>
+        <div class="mini-line" style="color:var(--text-secondary)">
+          “∓” in the homomorphism flips with the convention.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- Section 5: Euler Field -->
         <div class="section" data-section-id="5">
@@ -729,7 +853,7 @@
 
             <div class="insight">
                 <h3>The Liouville Property</h3>
-                <p>The Euler field satisfies $i_E\omega = \Theta$ and $\mathcal{L}_E\omega = \omega$. Under its flow, the symplectic form scales: $(\varphi_t^E)^*\omega = e^t\omega$. 
+                <p>The Euler field satisfies $i_E\omega = \Theta$ and $\mathcal{L}_E\omega = \omega$. Under its flow, the symplectic form scales: $(\varphi_t^E)^*\omega = e^t\omega$
             </div>
 
             <div class="viz-container">
@@ -1606,206 +1730,234 @@ const areaRatio = area1 / area0;
     
     draw();
 })();
-        // Part 4: Poisson Bracket
-        (function() {
-            const ctx1 = setupCanvas('viz-4a');
-            const ctx2 = setupCanvas('viz-4b');
-            
-            function draw() {
-                const f = document.getElementById('ctrl-4-f').value;
-                const g = document.getElementById('ctrl-4-g').value;
-                
-                const canvas1 = ctx1.canvas;
-                const canvas2 = ctx2.canvas;
-                const w1 = canvas1.width / (window.devicePixelRatio || 1);
-                const h1 = canvas1.height / (window.devicePixelRatio || 1);
-                const w2 = canvas2.width / (window.devicePixelRatio || 1);
-                const h2 = canvas2.height / (window.devicePixelRatio || 1);
-                
-                ctx1.clearRect(0, 0, w1, h1);
-                ctx2.clearRect(0, 0, w2, h2);
-                
-                // Bracket geometry
-                ctx1.save();
-                ctx1.translate(w1/2, h1/2);
-                
-                // Draw level sets of f
-                ctx1.strokeStyle = getColor('accent-blue');
-                ctx1.lineWidth = 1.5;
-                ctx1.globalAlpha = 0.6;
-                
-                if (f === 'x') {
-                    for (let x = -150; x <= 150; x += 30) {
-                        ctx1.beginPath();
-                        ctx1.moveTo(x, -180);
-                        ctx1.lineTo(x, 180);
-                        ctx1.stroke();
-                    }
-                } else if (f === 'p') {
-                    for (let p = -150; p <= 150; p += 30) {
-                        ctx1.beginPath();
-                        ctx1.moveTo(-180, -p);
-                        ctx1.lineTo(180, -p);
-                        ctx1.stroke();
-                    }
-                } else if (f === 'L') {
-                    // Hyperbolas for angular momentum
-                    for (let c = -100; c <= 100; c += 50) {
-                        if (c !== 0) {
-                            ctx1.beginPath();
-                            for (let x = -150; x <= 150; x += 5) {
-                                const y = c / x;
-                                if (Math.abs(y) < 150) {
-                                    if (x === -150) ctx1.moveTo(x, -y);
-                                    else ctx1.lineTo(x, -y);
-                                }
-                            }
-                            ctx1.stroke();
-                        }
-                    }
-                } else if (f === 'H') {
-                    for (let r = 40; r <= 120; r += 40) {
-                        ctx1.beginPath();
-                        ctx1.arc(0, 0, r, 0, 2 * Math.PI);
-                        ctx1.stroke();
-                    }
-                }
-                
-                ctx1.globalAlpha = 1;
-                
-                // Draw Hamiltonian vector field of g
-                ctx1.strokeStyle = getColor('accent-red');
-                ctx1.lineWidth = 1;
-                
-                for (let i = -6; i <= 6; i += 2) {
-                    for (let j = -6; j <= 6; j += 2) {
-                        const x = i * 30;
-                        const p = j * 30;
-                        
-                        let dx = 0, dp = 0;
-                        
-                        if (g === 'p') {
-                            dx = 1;
-                            dp = 0;
-                        } else if (g === 'x') {
-                            dx = 0;
-                            dp = -1;
-                        } else if (g === 'L') {
-                            dx = -p / 30;
-                            dp = x / 30;
-                        } else if (g === 'H') {
-                            dx = p / 30;
-                            dp = -x / 30;
-                        }
-                        
-                        const scale = 20;
-                        dx *= scale;
-                        dp *= scale;
-                        
-                        if (dx !== 0 || dp !== 0) {
-                            ctx1.beginPath();
-                            ctx1.moveTo(x, -p);
-                            ctx1.lineTo(x + dx, -p - dp);
-                            ctx1.stroke();
-                            
-                            // Arrow
-                            ctx1.save();
-                            ctx1.translate(x + dx, -p - dp);
-                            ctx1.rotate(Math.atan2(-dp, dx));
-                            ctx1.fillStyle = getColor('accent-red');
-                            ctx1.beginPath();
-                            ctx1.moveTo(0, 0);
-                            ctx1.lineTo(-5, 2);
-                            ctx1.lineTo(-5, -2);
-                            ctx1.fill();
-                            ctx1.restore();
-                        }
-                    }
-                }
-                
-                // Calculate bracket value
-                let bracketValue = 'complex';
-                if (f === 'x' && g === 'p') bracketValue = '1';
-                else if (f === 'p' && g === 'x') bracketValue = '-1';
-                else if (f === g) bracketValue = '0';
-                else if (f === 'x' && g === 'L') bracketValue = 'y';
-                else if (f === 'p' && g === 'L') bracketValue = '-p_y';
-                else if ((f === 'L' || f === 'H') && (g === 'L' || g === 'H')) bracketValue = '0';
-                
-                document.getElementById('bracket-result').textContent = bracketValue;
-                
-                ctx1.restore();
-                
-                // Jacobi identity visualization
-                ctx2.save();
-                ctx2.translate(w2/2, h2/2);
-                
-                const time = Date.now() / 3000;
-                
-                // Three functions in cyclic symmetry
-                const functions = ['f', 'g', 'h'];
-                const colors = [
-                    getColor('accent-blue'),
-                    getColor('accent-green'),
-                    getColor('accent-red')
-                ];
-                
-                for (let i = 0; i < 3; i++) {
-                    const angle = (i * 2 * Math.PI / 3) + time;
-                    const x = 80 * Math.cos(angle);
-                    const y = 80 * Math.sin(angle);
-                    
-                    // Draw vector
-                    ctx2.strokeStyle = colors[i];
-                    ctx2.lineWidth = 3;
-                    ctx2.beginPath();
-                    ctx2.moveTo(0, 0);
-                    ctx2.lineTo(x, y);
-                    ctx2.stroke();
-                    
-                    // Draw circle at end
-                    ctx2.fillStyle = colors[i];
-                    ctx2.beginPath();
-                    ctx2.arc(x, y, 8, 0, 2 * Math.PI);
-                    ctx2.fill();
-                    
-                    // Label
-                    ctx2.fillStyle = getColor('text-primary');
-                    ctx2.font = 'bold 16px monospace';
-                    ctx2.fillText(functions[i], x * 1.3, y * 1.3);
-                }
-                
-                // Draw cycling triangle
-                ctx2.strokeStyle = 'rgba(255,255,255,0.2)';
-                ctx2.lineWidth = 1;
-                ctx2.setLineDash([5, 5]);
-                ctx2.beginPath();
-                for (let i = 0; i <= 3; i++) {
-                    const angle = (i * 2 * Math.PI / 3) + time;
-                    const x = 80 * Math.cos(angle);
-                    const y = 80 * Math.sin(angle);
-                    if (i === 0) ctx2.moveTo(x, y);
-                    else ctx2.lineTo(x, y);
-                }
-                ctx2.stroke();
-                ctx2.setLineDash([]);
-                
-                // Jacobi formula
-                ctx2.fillStyle = getColor('text-primary');
-                ctx2.font = '12px monospace';
-                ctx2.textAlign = 'center';
-                ctx2.fillText('Σ cyclic = 0', 0, 140);
-                
-                ctx2.restore();
-                
-                requestAnimationFrame(draw);
-            }
-            
-            document.getElementById('ctrl-4-f').addEventListener('change', draw);
-            document.getElementById('ctrl-4-g').addEventListener('change', draw);
-            
-            draw();
-        })();
+       
+// Part 4: Poisson Bracket — exact Jacobi + invariance + homomorphism
+(function(){
+  // canvases
+  const ctxGeo = setupCanvas('pb4-geo');
+  const ctxVec = setupCanvas('pb4-vectors');
+
+  // controls
+  const selF = document.getElementById('pb4-f');
+  const selG = document.getElementById('pb4-g');
+  const selH = document.getElementById('pb4-h');
+  const sX0  = document.getElementById('pb4-x0');
+  const sP0  = document.getElementById('pb4-p0');
+  const sSig = document.getElementById('pb4-sigma');
+  const btnC = document.getElementById('pb4-conv');
+
+  const valX0  = document.getElementById('pb4-x0-val');
+  const valP0  = document.getElementById('pb4-p0-val');
+  const valSig = document.getElementById('pb4-sigma-val');
+
+  const outSkew = document.getElementById('pb4-skew');
+  const outJac  = document.getElementById('pb4-jacobi');
+  const outHomo = document.getElementById('pb4-homo');
+  const outInv  = document.getElementById('pb4-inv');
+
+  // analytic library (values + first/second partials)
+  const LIB = {
+    x:   { f:(x,p)=>x,                fx:(x,p)=>1,           fp:(x,p)=>0,  dxx:()=>0,             dpp:()=>0,            dxp:()=>0 },
+    p:   { f:(x,p)=>p,                fx:()=>0,              fp:()=>1,     dxx:()=>0,             dpp:()=>0,            dxp:()=>0 },
+    Hx:  { f:(x,p)=>0.5*(x*x+p*p),    fx:(x,p)=>x,           fp:(x,p)=>p,  dxx:()=>1,             dpp:()=>1,            dxp:()=>0 },
+    x2:  { f:(x,p)=>0.5*x*x,          fx:(x,p)=>x,           fp:()=>0,     dxx:()=>1,             dpp:()=>0,            dxp:()=>0 },
+    p2:  { f:(x,p)=>0.5*p*p,          fx:()=>0,              fp:(x,p)=>p,  dxx:()=>0,             dpp:()=>1,            dxp:()=>0 },
+    sinx:{ f:(x,p)=>Math.sin(x),      fx:(x,p)=>Math.cos(x), fp:()=>0,     dxx:(x,p)=>-Math.sin(x),dpp:()=>0,            dxp:()=>0 },
+    cosx:{ f:(x,p)=>Math.cos(x),      fx:(x,p)=>-Math.sin(x),fp:()=>0,     dxx:(x,p)=>-Math.cos(x),dpp:()=>0,            dxp:()=>0 },
+    xp:  { f:(x,p)=>x*p,              fx:(x,p)=>p,           fp:(x,p)=>x,  dxx:()=>0,             dpp:()=>0,            dxp:()=>1 },
+  };
+
+  // sign convention toggle
+  let useAssignmentSign = true;
+  btnC.onclick = () => {
+    useAssignmentSign = !useAssignmentSign;
+    btnC.textContent = useAssignmentSign
+      ? "Current: {f,g} = ∂f/∂x ∂g/∂p − ∂f/∂p ∂g/∂x"
+      : "Current: {f,g} = X_f(g) = ∂f/∂p ∂g/∂x − ∂f/∂x ∂g/∂p";
+    draw();
+  };
+
+  // helpers for PB + derivatives
+  function PB(F,G,x,p){
+    const base = F.fx(x,p)*G.fp(x,p) - F.fp(x,p)*G.fx(x,p);
+    return useAssignmentSign ? base : -base;
+  }
+  function PB_x(F,G,x,p){
+    const t = F.dxx(x,p)*G.fp(x,p) + F.fx(x,p)*G.dxp(x,p)
+            - F.dxp(x,p)*G.fx(x,p) - F.fp(x,p)*G.dxx(x,p);
+    return useAssignmentSign ? t : -t;
+  }
+  function PB_p(F,G,x,p){
+    const t = F.dxp(x,p)*G.fp(x,p) + F.fx(x,p)*G.dpp(x,p)
+            - F.dpp(x,p)*G.fx(x,p) - F.fp(x,p)*G.dxp(x,p);
+    return useAssignmentSign ? t : -t;
+  }
+
+  // Lie bracket of Hamiltonian vector fields
+  function lieBracket(F,G,x,p){
+    const Xf = {x: F.fp(x,p), p: -F.fx(x,p)};
+    const Xg = {x: G.fp(x,p), p: -G.fx(x,p)};
+    function DX_of(H){
+      return { xx:H.dxp(x,p), xp:-H.dxx(x,p), px:H.dpp(x,p), pp:-H.dxp(x,p) };
+    }
+    const DHf = DX_of(F), DHg = DX_of(G);
+    const DHg_Xf = { x: DHg.xx*Xf.x + DHg.xp*Xf.p, p: DHg.px*Xf.x + DHg.pp*Xf.p };
+    const DHf_Xg = { x: DHf.xx*Xg.x + DHf.xp*Xg.p, p: DHf.px*Xg.x + DHf.pp*Xg.p };
+    return { x: DHg_Xf.x - DHf_Xg.x, p: DHg_Xf.p - DHf_Xg.p };
+  }
+
+  // ---------- LEFT CANVAS (geometry) ----------
+  function drawLeft(F,G){
+    const w = ctxGeo.canvas.width  / (window.devicePixelRatio || 1);
+    const h = ctxGeo.canvas.height / (window.devicePixelRatio || 1);
+    ctxGeo.clearRect(0,0,w,h);
+    ctxGeo.save(); ctxGeo.translate(w/2, h/2);
+
+    // subtle grid
+    ctxGeo.strokeStyle = 'rgba(255,255,255,0.08)';
+    for(let i=-180;i<=180;i+=30){
+      ctxGeo.beginPath(); ctxGeo.moveTo(i,-150); ctxGeo.lineTo(i,150); ctxGeo.stroke();
+      ctxGeo.beginPath(); ctxGeo.moveTo(-180,i); ctxGeo.lineTo(180,i); ctxGeo.stroke();
+    }
+
+    // vector field X_g
+    ctxGeo.strokeStyle = getColor('accent-red');
+    for (let i=-5;i<=5;i+=2){
+      for (let j=-5;j<=5;j+=2){
+        const x=i/2, p=j/2;
+        let dx = G.fp(x,p), dp = -G.fx(x,p);
+        const m = Math.hypot(dx,dp)||1; dx*=18/m; dp*=18/m;
+        const X0 = x*60, P0 = -p*60;
+        ctxGeo.beginPath(); ctxGeo.moveTo(X0,P0); ctxGeo.lineTo(X0 + dx, P0 - dp); ctxGeo.stroke();
+      }
+    }
+
+    // a few f-level hints for simple choices (quiet, non-intrusive)
+    ctxGeo.strokeStyle = 'rgba(66,133,244,0.22)';
+    if(F===LIB.Hx){
+      for(let E=0.5;E<=3;E+=0.5){
+        const r = Math.sqrt(2*E)*60;
+        ctxGeo.beginPath(); ctxGeo.arc(0,0,r,0,2*Math.PI); ctxGeo.stroke();
+      }
+    }else if(F===LIB.x2){
+      for(let k=20;k<=140;k+=20){
+        ctxGeo.beginPath(); ctxGeo.moveTo(-k,-150); ctxGeo.lineTo(-k,150); ctxGeo.stroke();
+        ctxGeo.beginPath(); ctxGeo.moveTo(k,-150); ctxGeo.lineTo(k,150);  ctxGeo.stroke();
+      }
+    }else if(F===LIB.p2){
+      for(let k=20;k<=140;k+=20){
+        ctxGeo.beginPath(); ctxGeo.moveTo(-180,-k); ctxGeo.lineTo(180,-k); ctxGeo.stroke();
+        ctxGeo.beginPath(); ctxGeo.moveTo(-180,k);  ctxGeo.lineTo(180,k);  ctxGeo.stroke();
+      }
+    }
+
+    // axes labels
+    ctxGeo.fillStyle = getColor('text-secondary');
+    ctxGeo.font='12px monospace';
+    ctxGeo.fillText('x', 170, 12); ctxGeo.fillText('p', 6, -135);
+
+    ctxGeo.restore();
+  }
+
+  // ---------- RIGHT CANVAS (vector lab) ----------
+  function drawVectors(F,G,x0,p0){
+    const w = ctxVec.canvas.width  / (window.devicePixelRatio || 1);
+    const h = ctxVec.canvas.height / (window.devicePixelRatio || 1);
+    ctxVec.clearRect(0,0,w,h);
+    ctxVec.save(); ctxVec.translate(w/2, h/2);
+
+    // neat background disk (gives focus, no text)
+    ctxVec.beginPath();
+    ctxVec.arc(0,0,110,0,2*Math.PI);
+    ctxVec.fillStyle = 'rgba(255,255,255,0.035)';
+    ctxVec.fill();
+
+    // compute vectors at (x0,p0)
+    const Xf = { x: F.fp(x0,p0), p: -F.fx(x0,p0) };
+    const Xg = { x: G.fp(x0,p0), p: -G.fx(x0,p0) };
+    const Xpb = { x: PB_p(F,G,x0,p0), p: -PB_x(F,G,x0,p0) };
+    const Lbr = lieBracket(F,G,x0,p0);
+    const sign = useAssignmentSign ? -1 : +1; // assignment ⇒ minus
+    const Xlie = { x: sign*Lbr.x, p: sign*Lbr.p };
+
+    // arrow drawer (no labels on canvas)
+    function drawArrow(vx,vp,len,strokeStyle){
+      const m = Math.hypot(vx,vp)||1; const ux=vx/m, up=vp/m;
+      ctxVec.strokeStyle = strokeStyle; ctxVec.lineWidth = 3;
+      ctxVec.beginPath(); ctxVec.moveTo(0,0); ctxVec.lineTo(len*ux, -len*up); ctxVec.stroke();
+      // arrow head
+      ctxVec.save();
+      ctxVec.translate(len*ux, -len*up);
+      ctxVec.rotate(Math.atan2(-up, ux));
+      ctxVec.beginPath();
+      ctxVec.moveTo(0,0); ctxVec.lineTo(-8, 4); ctxVec.lineTo(-8,-4); ctxVec.closePath(); ctxVec.fillStyle = strokeStyle; ctxVec.fill();
+      ctxVec.restore();
+    }
+
+    const L = 80; // arrow length
+    drawArrow(Xf.x,  Xf.p,  L, getComputedStyle(document.documentElement).getPropertyValue('--accent-blue').trim());
+    drawArrow(Xg.x,  Xg.p,  L, getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim());
+    drawArrow(Xpb.x, Xpb.p, L, '#b388ff'); // violet
+    drawArrow(Xlie.x,Xlie.p, L, '#fbbc04'); // amber
+
+    // small marker for (x0,p0) magnitude (pulse)
+    const t = Date.now()/700;
+    const r = 6 + 2*Math.sin(t);
+    ctxVec.fillStyle = 'rgba(255,255,255,0.25)';
+    ctxVec.beginPath(); ctxVec.arc(0,0,r,0,2*Math.PI); ctxVec.fill();
+
+    ctxVec.restore();
+  }
+
+  // ---------- KPIs ----------
+  function updateKPIs(F,G,H,x0,p0,sigma){
+    // skew
+    const fg = PB(F,G,x0,p0);
+    const gf = PB(G,F,x0,p0);
+    outSkew.textContent = (fg+gf).toExponential(2);
+
+    // Jacobi: {{f,g},h} vs {f,{g,h}} − {g,{f,h}}
+    const FGx = PB_x(F,G,x0,p0), FGp = PB_p(F,G,x0,p0);
+    const GHx = PB_x(G,H,x0,p0), GHp = PB_p(G,H,x0,p0);
+    const HFx = PB_x(H,F,x0,p0), HFp = PB_p(H,F,x0,p0);
+    const lhs  = FGx*H.fp(x0,p0) - FGp*H.fx(x0,p0);
+    const rhs  = (GHx*F.fp(x0,p0) - GHp*F.fx(x0,p0)) - (HFx*G.fp(x0,p0) - HFp*G.fx(x0,p0));
+    outJac.textContent = Math.abs(lhs - rhs).toExponential(2);
+
+    // invariance under x̃=σx, p̃=p/σ
+    function gradT(Fn){ return { fx:(1/sigma)*Fn.fx(x0,p0), fp:sigma*Fn.fp(x0,p0) }; }
+    const fT = gradT(F), gT = gradT(G);
+    const pb_tilde = useAssignmentSign
+      ? fT.fx*gT.fp - fT.fp*gT.fx
+      : -(fT.fx*gT.fp - fT.fp*gT.fx);
+    outInv.textContent = Math.abs(fg - pb_tilde).toExponential(2);
+
+    // homomorphism
+    const Xpb = { x: PB_p(F,G,x0,p0), p: -PB_x(F,G,x0,p0) };
+    const Lbr = lieBracket(F,G,x0,p0);
+    const sign = useAssignmentSign ? -1 : +1;
+    const Xlie = { x: sign*Lbr.x, p: sign*Lbr.p };
+    outHomo.textContent = Math.hypot(Xpb.x - Xlie.x, Xpb.p - Xlie.p).toExponential(2);
+  }
+
+  function draw(){
+    const F = LIB[selF.value], G = LIB[selG.value], H = LIB[selH.value];
+    const x0 = parseFloat(sX0.value)/100;
+    const p0 = parseFloat(sP0.value)/100;
+    const sigma = parseFloat(sSig.value)/100;
+
+    valX0.textContent = x0.toFixed(2);
+    valP0.textContent = p0.toFixed(2);
+    valSig.textContent = sigma.toFixed(2);
+
+    drawLeft(F,G);
+    drawVectors(F,G,x0,p0);
+    updateKPIs(F,G,H,x0,p0,sigma);
+  }
+
+  [selF, selG, selH, sX0, sP0, sSig].forEach(el => el.addEventListener('input', draw));
+  draw();
+})();
 
         // Part 5: Euler Field
         (function() {
