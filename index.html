@@ -576,7 +576,7 @@
   $$\omega = dp_i\wedge dx^i,\qquad V \mapsto i_V(\omega)=(dp_i(V))\,dx^i-(dx^i(V))\,dp_i$$
   $$H \mapsto X_H = -\,\omega^{-1} dH
     = \big(-\partial_{x^i}H\big)\,\partial_{p_i}
-      + \big(\partial_{p_i}H\big)\,\partial_{x^i}.$$
+      + \big(\partial_{p_i}H\big)\,\partial_{x^i}$$
 </div>
 
     <div class="insight">
@@ -623,39 +623,30 @@
         <div>Area ratio A(t)/A₀: <span class="value" id="area-ratio">1.000000</span></div>
       </div>
 
-<div class="insight">
-<h3>Quick Guide</h3>
-        <ul style="margin-top:.25rem">
-        <h3>Why $\mathcal{L}_{X_H}\omega = 0$</h3>
-        <p>Cartan’s formula gives $\mathcal{L}_{X_H}\omega=d(i_{X_H}\omega)+i_{X_H}(d\omega) = d(-dH)+0=0$ since $\omega$ is closed and $i_{X_H}\omega=-dH$.</p>
-        <h3 style="margin-top:1rem;">Why $\mathcal{L}_{X_H}H = 0$</h3>
-        <div class="math-display">
-  $$\omega = dp_i \wedge dx^i,\qquad V \longmapsto i_V(\omega)=(dp_i(V))\,dx^i-(dx^i(V))\,dp_i$$
-  $$H \mapsto X_H = -\,\omega^{-1} dH
-    = \big(-\partial_{x^i}H\big)\,\partial_{p_i}
-      + \big(\partial_{p_i}H\big)\,\partial_{x^i}.$$
-</div>
+<div class="insight" id="sec3-insight">
+  <h3>Quick Guide — Why $\mathcal{L}_{X_H}\omega = 0$ and $\mathcal{L}_{X_H}H = 0$</h3>
 
-    <div class="insight">
-        <h3>Verification of $\mathcal{L}_{X_H}\omega = 0$</h3>
-        <p>Using Cartan's formula: $\mathcal{L}_{X_H}\omega = d(i_{X_H}\omega) + i_{X_H}(d\omega)$</p>
-        <div class="math-display">
-            $$\begin{aligned}
-            i_{X_H}\omega &= i_{X_H}(dp_i \wedge dx^i) = (X_H \cdot dp_i)dx^i - (X_H \cdot dx^i)dp_i \\
-            &= -\frac{\partial H}{\partial x^i}dx^i - \frac{\partial H}{\partial p_i}dp_i = -dH
-            \end{aligned}$$
-        </div>
-        <p>Since $\omega$ is closed ($d\omega = 0$) and $d(dH) = 0$:</p>
-        <div class="math-display">
-            $$\mathcal{L}_{X_H}\omega = d(-dH) + 0 = 0$$
-        </div>
-        
-        <h3 style="margin-top: 1.5rem;">Verification of $\mathcal{L}_{X_H}H = 0$</h3>
-        <div class="math-display">
-            $$\mathcal{L}_{X_H}H = X_H(H) = \frac{\partial H}{\partial p_i}\frac{\partial H}{\partial x^i} - \frac{\partial H}{\partial x^i}\frac{\partial H}{\partial p_i} = 0$$
-        </div>
-        <p>The visualization shows both properties: trajectories follow level sets of $H$ (energy conservation) and the divergence of $X_H$ is zero (volume preservation).</p>
-    </div>
+  <p style="margin-top:.5rem">
+    <strong>Cartan’s formula:</strong> $\ \mathcal{L}_{X_H}\omega = d\!\left(i_{X_H}\omega\right)+i_{X_H}(d\omega)$.
+    Since $i_{X_H}\omega=-\,dH$ and $d\omega=0$, we get $\ \mathcal{L}_{X_H}\omega=d(-dH)+0=0$.
+  </p>
+
+  <div class="math-display" style="margin-top:1rem">
+    $$\omega = dp_i \wedge dx^i,\qquad V \longmapsto i_V(\omega)=(dp_i(V))\,dx^i-(dx^i(V))\,dp_i$$
+    $$H \mapsto X_H = -\,\omega^{-1} dH
+      = \big(-\partial_{x^i}H\big)\,\partial_{p_i}
+        + \big(\partial_{p_i}H\big)\,\partial_{x^i}$$
+  </div>
+
+  <div class="math-display" style="margin-top:1rem">
+    $$\mathcal{L}_{X_H}H = X_H(H) = \frac{\partial H}{\partial p_i}\frac{\partial H}{\partial x^i}
+      - \frac{\partial H}{\partial x^i}\frac{\partial H}{\partial p_i} = 0$$
+  </div>
+
+  <p style="margin-top:1rem">
+    <strong>How to read the plots:</strong> the left panel draws $X_H$ and sample trajectories (level sets of $H$);
+    the right panel evolves a region to show area preservation (Liouville).
+  </p>
 </div>
 
         <!-- Section 4: Poisson Bracket -->
