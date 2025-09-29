@@ -622,7 +622,7 @@
         <div>Max |div(X_H)|: <span class="value" id="div-xh">0.000000</span></div>
         <div>Area ratio A(t)/A₀: <span class="value" id="area-ratio">1.000000</span></div>
       </div>
-    
+
 <div class="insight" id="sec3-numerics">
   <h3>How we achieve machine-precision area preservation</h3>
   <ul style="margin-top:.25rem">
@@ -1471,84 +1471,87 @@ ctx2.stroke();
         ctx2.textAlign = 'center';
         ctx2.fillText('Verification of Conservation Laws', 0, -160);
         
-        // Draw a test region evolution to show area preservation
-        const testRegion = [];
-        const N = 20;
-        for (let i = 0; i < N; i++) {
-            const angle = 2 * Math.PI * i / N;
-            testRegion.push({
-                x: 0.5 + 0.2 * Math.cos(angle),
-                p: 0.5 + 0.2 * Math.sin(angle)
-            });
-        }
-        
-        // Draw initial region
-        ctx2.fillStyle = 'rgba(66, 133, 244, 0.3)';
-        ctx2.strokeStyle = getColor('accent-blue');
-        ctx2.lineWidth = 2;
-        ctx2.beginPath();
-        for (let i = 0; i <= N; i++) {
-            const pt = testRegion[i % N];
-            if (i === 0) ctx2.moveTo(pt.x * 100, -pt.p * 100);
-            else ctx2.lineTo(pt.x * 100, -pt.p * 100);
-        }
-        ctx2.fill();
-        ctx2.stroke();
-        
-        // Evolve the region
-        const evolvedRegion = [];
-        for (let pt of testRegion) {
-            let x = pt.x;
-            let p = pt.p;
-            
-            // Integrate forward in time
-            const dt = 0.01;
-            const steps = Math.floor(time / dt);
-            
-            for (let step = 0; step < steps; step++) {
-                let dx, dp;
-                if (system === 'harmonic') {
-                    dx = p;
-                    dp = -x;
-                } else if (system === 'anharmonic') {
-                    dx = p;
-                    dp = -Math.pow(x, 3);
-                } else {
-                    dx = p;
-                    dp = -Math.sin(x);
-                }
-                x += dx * dt;
-                p += dp * dt;
-            }
-            
-            evolvedRegion.push({ x, p });
-        }
-        
-        // Draw evolved region
-        ctx2.fillStyle = 'rgba(234, 67, 53, 0.3)';
-        ctx2.strokeStyle = getColor('accent-red');
-        ctx2.beginPath();
-        for (let i = 0; i <= N; i++) {
-            const pt = evolvedRegion[i % N];
-            if (i === 0) ctx2.moveTo(pt.x * 100, -pt.p * 100);
-            else ctx2.lineTo(pt.x * 100, -pt.p * 100);
-        }
-        ctx2.fill();
-        ctx2.stroke();
-        
-        // Calculate areas (Shoelace formula)
-        function calculateArea(region) {
-            let area = 0;
-            for (let i = 0; i < region.length; i++) {
-                const j = (i + 1) % region.length;
-                area += region[i].x * region[j].p - region[j].x * region[i].p;
-            }
-            return Math.abs(area) / 2;
-        }
-        
-        const area0 = calculateArea(testRegion);
-        const area1 = calculateArea(evolvedRegion);
-        const areaRatio = area1 / area0;
+        // --- Symplectic helpers (separable H = T(p)+V(x)) ---
+function dVdx(system, x){
+  if (system === 'harmonic')   return x;           // V = ½ x^2
+  if (system === 'anharmonic') return x*x*x;       // V = ¼ x^4
+  if (system === 'pendulum')   return Math.sin(x); // V = 1 - cos x (const shift irrelevant)
+  return 0;
+}
+function dTdp(p){ return p; } // T = ½ p^2
+
+// One Störmer–Verlet step (area-preserving)
+function verletStep(system, x, p, dt){
+  const p_half = p - 0.5*dt * dVdx(system, x);
+  const x_new  = x + dt * dTdp(p_half);
+  const p_new  = p_half - 0.5*dt * dVdx(system, x_new);
+  return {x: x_new, p: p_new};
+}
+
+// --- Build test region (more points = smoother & stabler area) ---
+const testRegion = [];
+const N = 60; // was 20
+for (let i = 0; i < N; i++) {
+  const ang = 2 * Math.PI * i / N;
+  testRegion.push({
+    x: 0.5 + 0.25 * Math.cos(ang),  // slightly larger ellipse
+    p: 0.5 + 0.18 * Math.sin(ang)
+  });
+}
+
+// Draw initial region
+ctx2.fillStyle = 'rgba(66, 133, 244, 0.3)';
+ctx2.strokeStyle = getColor('accent-blue');
+ctx2.lineWidth = 2;
+ctx2.beginPath();
+for (let i = 0; i <= N; i++) {
+  const pt = testRegion[i % N];
+  if (i === 0) ctx2.moveTo(pt.x * 100, -pt.p * 100);
+  else ctx2.lineTo(pt.x * 100, -pt.p * 100);
+}
+ctx2.fill();
+ctx2.stroke();
+
+// --- Evolve region with symplectic integrator ---
+const evolvedRegion = [];
+{
+  const dt = 0.01;
+  const steps = Math.max(1, Math.floor(time / dt));
+  for (const pt of testRegion) {
+    let x = pt.x, p = pt.p;
+    for (let s = 0; s < steps; s++) {
+      const np = verletStep(system, x, p, dt);
+      x = np.x; p = np.p;
+    }
+    evolvedRegion.push({x, p});
+  }
+}
+
+// Draw evolved region
+ctx2.fillStyle = 'rgba(234, 67, 53, 0.3)';
+ctx2.strokeStyle = getColor('accent-red');
+ctx2.beginPath();
+for (let i = 0; i <= N; i++) {
+  const pt = evolvedRegion[i % N];
+  if (i === 0) ctx2.moveTo(pt.x * 100, -pt.p * 100);
+  else ctx2.lineTo(pt.x * 100, -pt.p * 100);
+}
+ctx2.fill();
+ctx2.stroke();
+
+// --- Areas (Shoelace) in (x,p) coordinates ---
+function polygonArea(region){
+  let a = 0;
+  for (let i = 0; i < region.length; i++) {
+    const j = (i + 1) % region.length;
+    a += region[i].x * region[j].p - region[j].x * region[i].p;
+  }
+  return Math.abs(a) / 2;
+}
+const area0 = polygonArea(testRegion);
+const area1 = polygonArea(evolvedRegion);
+const areaRatio = area1 / area0;
+
         
         // Display results
         ctx2.fillStyle = getColor('text-primary');
