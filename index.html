@@ -840,49 +840,89 @@
   </div>
 </div>
 
-        <!-- Section 5: Euler Field -->
-        <div class="section" data-section-id="5">
-            <div class="section-header">
-                <span class="section-number">5</span>
-                <h2>The Euler-Liouville Field</h2>
-            </div>
+       <!-- Section 5: Euler–Liouville Field -->
+<div class="section" data-section-id="5">
+  <div class="section-header">
+    <span class="section-number">5</span>
+    <h2>The Euler–Liouville Field</h2>
+  </div>
 
-            <div class="math-display">
-                $$E = \sum_i p_i \frac{\partial}{\partial p_i} \quad \Rightarrow \quad \varphi_t^E(x,p) = (x, e^t p)$$
-            </div>
+  <div class="math-display">
+  $$E \;=\; p_1 \frac{\partial}{\partial p_1} \;+\; \cdots \;+\; p_n \frac{\partial}{\partial p_n}$$
+  $$\varphi_t^E(x,p) \;=\; (\,x,\, e^t p\,)$$
+</div>
 
-            <div class="insight">
-                <h3>The Liouville Property</h3>
-                <p>The Euler field satisfies $i_E\omega = \Theta$ and $\mathcal{L}_E\omega = \omega$. Under its flow, the symplectic form scales: $(\varphi_t^E)^*\omega = e^t\omega$
-            </div>
+  <!-- Euler field form in any canonical coordinates -->
+<div class="insight">
+  <h3>Euler Field in Any Canonical Coordinates</h3>
+  <p>In canonical coordinates $(\tilde x,\tilde p)$ with $\tilde p_i = p_j\,(J^{-1})^j{}_i$, the Euler field keeps exactly the same index-by-index form:</p>
+  <div class="math-display" style="margin-top:.5rem">
+    $$E \;=\; p_1 \frac{\partial}{\partial p_1} \;+\; \cdots \;+\; p_n \frac{\partial}{\partial p_n}
+      \;=\; \tilde p_1 \frac{\partial}{\partial \tilde p_1} \;+\; \cdots \;+\; \tilde p_n \frac{\partial}{\partial \tilde p_n}$$
+  </div>
+</div>
 
-            <div class="viz-container">
-                <div class="viz-panel">
-                    <div class="viz-title">Fiber Dilation Flow</div>
-                    <canvas id="viz-5a"></canvas>
-                </div>
-                <div class="viz-panel">
-                    <div class="viz-title">Symplectic Scaling</div>
-                    <canvas id="viz-5b"></canvas>
-                </div>
-            </div>
-
-            <div class="controls">
-                <div class="control-group">
-                    <label>Flow Parameter t: <span id="val-5-t">0.00</span></label>
-                    <input type="range" id="ctrl-5-t" min="-200" max="200" value="0">
-                </div>
-                <div class="control-group">
-                    <label>Scale Factor e^t: <span id="val-5-scale">1.00</span></label>
-                </div>
-                <button class="button" id="btn-5-animate">Animate Scaling</button>
-            </div>
-
-            <div class="result">
-                Volume Scaling: <span class="value" id="volume-scale">1.00</span>
-            </div>
-        </div>
+  <div class="viz-container">
+    <div class="viz-panel">
+      <div class="viz-title">Fiber Dilation Flow φᵗᴱ</div>
+      <canvas id="viz-5a"></canvas>
     </div>
+    <div class="viz-panel">
+      <div class="viz-title">Verification Panel</div>
+      <canvas id="viz-5b"></canvas>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label>Flow Parameter t: <span id="val-5-t">0.00</span></label>
+      <input type="range" id="ctrl-5-t" min="-200" max="200" value="0">
+    </div>
+    <div class="control-group">
+      <label>Verification Mode</label>
+      <select id="ctrl-5-mode" class="button" style="width:100%">
+        <option value="scaling">ω-scaling: (φ_t^E)*ω = e^t · ω</option>
+        <option value="contraction">Contraction: i_E(ω) = Θ</option>
+        <option value="liouville">Liouville: ℒ_E ω = ω</option>
+        <option value="coordinate">Coordinate form of E</option>
+      </select>
+    </div>
+    <button class="button" id="btn-5-animate">Animate Flow</button>
+  </div>
+
+  <div class="result">
+    <div>Scale e^t: <span class="value" id="scale-5">1.000</span></div>
+    <div id="verification-5">Verification: <span class="value">Exact</span></div>
+  </div>
+
+  <div class="insight">
+  <h3>Liouville Property</h3>
+
+  <p><strong>Contraction:</strong> $i_E\omega=\Theta$:</p>
+  <div class="math-display">
+    $$\omega \;=\; dp_i \wedge dx^i,\qquad
+      i_E dp_i \;=\; E(p_i) \;=\; p_i,\qquad
+      i_E dx^i \;=\; E(x^i) \;=\; 0$$
+    $$\Rightarrow\quad i_E\omega
+      \;=\; (i_E dp_i)\,dx^i \;-\; dp_i\wedge(i_E dx^i)
+      \;=\; p_i\,dx^i \;=\; \Theta$$
+  </div>
+
+  <p><strong>Lie derivative (assignment notation):</strong></p>
+  <div class="math-display">
+    $$L_E(\omega) \;=\; d\,(i_E\omega) \;+\; i_E(d\omega)
+      \;=\; d\Theta \;+\; 0
+      \;=\; \omega$$
+  </div>
+
+  <p><strong>Pullback by the flow:</strong> under $\varphi_t^E(x,p)=(x,e^t p)$,</p>
+  <div class="math-display">
+    $$(\varphi_t^E)^*(dp_i\wedge dx^i)
+      \;=\; d(e^t p_i)\wedge dx^i
+      \;=\; e^t\,dp_i\wedge dx^i
+      \;=\; e^t\,\omega$$
+  </div>
+</div>
 
     <script>
         // Utility functions
@@ -1959,169 +1999,350 @@ const areaRatio = area1 / area0;
   draw();
 })();
 
-        // Part 5: Euler Field
-        (function() {
-            const ctx1 = setupCanvas('viz-5a');
-            const ctx2 = setupCanvas('viz-5b');
-            let isAnimating = false;
-            
-            function draw() {
-                let t = parseFloat(document.getElementById('ctrl-5-t').value) / 100;
-                
-                if (isAnimating) {
-                    t = Math.sin(Date.now() / 1000) * 2;
-                    document.getElementById('ctrl-5-t').value = t * 100;
-                }
-                
-                document.getElementById('val-5-t').textContent = t.toFixed(2);
-                const scale = Math.exp(t);
-                document.getElementById('val-5-scale').textContent = scale.toFixed(3);
-                document.getElementById('volume-scale').textContent = scale.toFixed(3);
-                
-                const canvas1 = ctx1.canvas;
-                const canvas2 = ctx2.canvas;
-                const w1 = canvas1.width / (window.devicePixelRatio || 1);
-                const h1 = canvas1.height / (window.devicePixelRatio || 1);
-                const w2 = canvas2.width / (window.devicePixelRatio || 1);
-                const h2 = canvas2.height / (window.devicePixelRatio || 1);
-                
-                ctx1.clearRect(0, 0, w1, h1);
-                ctx2.clearRect(0, 0, w2, h2);
-                
-                // Euler field visualization
-                ctx1.save();
-                ctx1.translate(w1/2, h1/2);
-                
-                // Draw fiber structure
-                ctx1.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx1.lineWidth = 1;
-                for (let x = -150; x <= 150; x += 50) {
-                    ctx1.beginPath();
-                    ctx1.moveTo(x, -180);
-                    ctx1.lineTo(x, 180);
-                    ctx1.stroke();
-                }
-                
-                // Base manifold Q
-                ctx1.strokeStyle = getColor('accent-green');
-                ctx1.lineWidth = 2;
-                ctx1.beginPath();
-                ctx1.moveTo(-180, 0);
-                ctx1.lineTo(180, 0);
-                ctx1.stroke();
-                
-                // Draw Euler vector field E = p ∂/∂p
-                ctx1.strokeStyle = getColor('accent-yellow');
-                ctx1.lineWidth = 1.5;
-                
-                for (let i = -3; i <= 3; i++) {
-                    for (let j = -6; j <= 6; j++) {
-                        if (j === 0) continue;
-                        
-                        const x = i * 50;
-                        const p = j * 30;
-                        
-                        // E points radially in p direction
-                        const dp = p * 0.3;
-                        
-                        ctx1.beginPath();
-                        ctx1.moveTo(x, -p);
-                        ctx1.lineTo(x, -p - dp);
-                        ctx1.stroke();
-                        
-                        // Arrow
-                        if (Math.abs(dp) > 10) {
-                            ctx1.save();
-                            ctx1.translate(x, -p - dp);
-                            ctx1.fillStyle = getColor('accent-yellow');
-                            ctx1.beginPath();
-                            ctx1.moveTo(0, 0);
-                            ctx1.lineTo(-3, dp > 0 ? 5 : -5);
-                            ctx1.lineTo(3, dp > 0 ? 5 : -5);
-                            ctx1.fill();
-                            ctx1.restore();
-                        }
-                        
-                        // Show scaled points
-                        const scaledP = p * scale;
-                        if (Math.abs(scaledP) < 180) {
-                            ctx1.fillStyle = `rgba(66, 133, 244, ${0.5 + 0.3 * Math.sin(Date.now() / 500 + i + j)})`;
-                            ctx1.beginPath();
-                            ctx1.arc(x, -scaledP, 4, 0, 2 * Math.PI);
-                            ctx1.fill();
-                        }
-                    }
-                }
-                
-                ctx1.restore();
-                
-                // Symplectic scaling visualization
-                ctx2.save();
-                ctx2.translate(w2/2, h2/2);
-                
-                // Original symplectic form (area element)
-                const w = 80;
-                const h = 60;
-                
-                ctx2.fillStyle = 'rgba(66, 133, 244, 0.3)';
-                ctx2.strokeStyle = getColor('accent-blue');
-                ctx2.lineWidth = 2;
-                ctx2.fillRect(-w/2, -h/2, w, h);
-                ctx2.strokeRect(-w/2, -h/2, w, h);
-                
-                // Scaled symplectic form
-                const scaledH = h * scale;
-                ctx2.fillStyle = 'rgba(234, 67, 53, 0.3)';
-                ctx2.strokeStyle = getColor('accent-red');
-                ctx2.fillRect(-w/2, -scaledH/2, w, scaledH);
-                ctx2.strokeRect(-w/2, -scaledH/2, w, scaledH);
-                
-                // Labels
-                ctx2.fillStyle = getColor('text-primary');
-                ctx2.font = '14px monospace';
-                ctx2.textAlign = 'center';
-                ctx2.fillText('ω', 0, -h/2 - 20);
-                ctx2.fillText(`e^t·ω`, 0, -scaledH/2 - 20);
-                
-                // Show the scaling relationship
-                ctx2.strokeStyle = getColor('accent-yellow');
-                ctx2.lineWidth = 2;
-                ctx2.setLineDash([5, 5]);
-                ctx2.beginPath();
-                ctx2.moveTo(-w/2, 0);
-                ctx2.lineTo(-w/2 - 30, 0);
-                ctx2.moveTo(-w/2 - 30, -h/2);
-                ctx2.lineTo(-w/2 - 30, h/2);
-                ctx2.stroke();
-                
-                ctx2.beginPath();
-                ctx2.moveTo(-w/2 - 50, 0);
-                ctx2.lineTo(-w/2 - 80, 0);
-                ctx2.moveTo(-w/2 - 80, -scaledH/2);
-                ctx2.lineTo(-w/2 - 80, scaledH/2);
-                ctx2.stroke();
-                ctx2.setLineDash([]);
-                
-                ctx2.restore();
-                
-                if (isAnimating) {
-                    requestAnimationFrame(draw);
-                }
-            }
-            
-            document.getElementById('btn-5-animate').addEventListener('click', () => {
-                isAnimating = !isAnimating;
-                document.getElementById('btn-5-animate').textContent = isAnimating ? 'Stop Scaling' : 'Animate Scaling';
-                document.getElementById('btn-5-animate').classList.toggle('active', isAnimating);
-                if (isAnimating) draw();
-            });
-            
-            document.getElementById('ctrl-5-t').addEventListener('input', () => {
-                if (!isAnimating) draw();
-            });
-            
-            draw();
-        })();
+        // Part 5: Euler–Liouville Field (polished JS; exact IDs preserved)
+(function () {
+  const ctx1 = setupCanvas('viz-5a');
+  const ctx2 = setupCanvas('viz-5b');
+
+  const sliderT = document.getElementById('ctrl-5-t');
+  const modeSel = document.getElementById('ctrl-5-mode');
+  const btnAnim = document.getElementById('btn-5-animate');
+
+  const outT     = document.getElementById('val-5-t');
+  const outScale = document.getElementById('scale-5');
+  const outVerif = document.getElementById('verification-5');
+
+  let isAnimating = false;
+
+  function draw() {
+    // 1) time/scale
+    let t = parseFloat(sliderT.value) / 100;
+    if (isAnimating) {
+      // gentle oscillation in [-2,2]
+      t = 2 * Math.sin(Date.now() / 1000);
+      sliderT.value = String(Math.round(t * 100));
+    }
+    const scale = Math.exp(t);
+    outT.textContent = t.toFixed(2);
+    outScale.textContent = clamp(scale, 1e-6, 1e6).toFixed(3);
+
+    // 2) canvas sizes
+    const w1 = ctx1.canvas.width / (window.devicePixelRatio || 1);
+    const h1 = ctx1.canvas.height / (window.devicePixelRatio || 1);
+    const w2 = ctx2.canvas.width / (window.devicePixelRatio || 1);
+    const h2 = ctx2.canvas.height / (window.devicePixelRatio || 1);
+    ctx1.clearRect(0, 0, w1, h1);
+    ctx2.clearRect(0, 0, w2, h2);
+
+    // 3) LEFT: fiber dilation flow (x fixed, p -> e^t p)
+    ctx1.save();
+    ctx1.translate(w1 / 2, h1 / 2);
+
+    // fibers
+    ctx1.strokeStyle = 'rgba(255,255,255,0.10)';
+    ctx1.lineWidth = 1;
+    for (let x = -150; x <= 150; x += 50) {
+      ctx1.beginPath();
+      ctx1.moveTo(x, -180);
+      ctx1.lineTo(x, 180);
+      ctx1.stroke();
+    }
+
+    // base manifold Q (x-axis)
+    ctx1.strokeStyle = getColor('accent-green');
+    ctx1.lineWidth = 2;
+    ctx1.beginPath();
+    ctx1.moveTo(-180, 0);
+    ctx1.lineTo(180, 0);
+    ctx1.stroke();
+
+    // Euler field E = p ∂/∂p  (draw short arrows, length ∝ |p|)
+    ctx1.strokeStyle = getColor('accent-yellow');
+    ctx1.lineWidth = 1.5;
+    for (let i = -3; i <= 3; i++) {
+      for (let j = -5; j <= 5; j++) {
+        if (j === 0) continue;
+        const x = i * 50;
+        const p = j * 30;
+        const dp = clamp(p * 0.25, -20, 20); // stable arrow length
+
+        ctx1.beginPath();
+        ctx1.moveTo(x, -p);
+        ctx1.lineTo(x, -p - dp);
+        ctx1.stroke();
+
+        if (Math.abs(dp) > 6) {
+          ctx1.save();
+          ctx1.translate(x, -p - dp);
+          ctx1.beginPath();
+          ctx1.moveTo(0, 0);
+          ctx1.lineTo(-3, dp > 0 ? 5 : -5);
+          ctx1.lineTo(3, dp > 0 ? 5 : -5);
+          ctx1.closePath();
+          ctx1.fillStyle = getColor('accent-yellow');
+          ctx1.fill();
+          ctx1.restore();
+        }
+      }
+    }
+
+    // flow samples: show p -> e^t p at several x’s
+    ctx1.setLineDash([5, 5]);
+    ctx1.strokeStyle = getColor('accent-blue');
+    ctx1.globalAlpha = 0.65;
+    for (let i = -2; i <= 2; i++) {
+      const x = i * 60;
+      for (let j = -3; j <= 3; j++) {
+        if (j === 0) continue;
+        const p0 = j * 40;
+        const p1 = p0 * scale;
+        if (Math.abs(p1) < 180) {
+          ctx1.beginPath();
+          ctx1.moveTo(x, -p0);
+          ctx1.lineTo(x, -p1);
+          ctx1.stroke();
+
+          // endpoint marker
+          ctx1.beginPath();
+          ctx1.arc(x, -p1, 3, 0, 2 * Math.PI);
+          ctx1.fillStyle = getColor('accent-red');
+          ctx1.fill();
+        }
+      }
+    }
+    ctx1.setLineDash([]);
+    ctx1.globalAlpha = 1;
+    ctx1.restore();
+
+    // 4) RIGHT: verification modes
+    ctx2.save();
+    ctx2.translate(w2 / 2, h2 / 2);
+
+    const mode = modeSel.value;
+
+    if (mode === 'scaling') {
+      // (φ_t^E)*ω = e^t ω  — visualize as height scaling of an area element
+      const W = 90, H = 60;
+
+      // original ω area tile
+      ctx2.fillStyle = 'rgba(66, 133, 244, 0.30)';
+      ctx2.strokeStyle = getColor('accent-blue');
+      ctx2.lineWidth = 2;
+      ctx2.fillRect(-W / 2, -H / 2, W, H);
+      ctx2.strokeRect(-W / 2, -H / 2, W, H);
+
+      // scaled tile
+      const Hs = clamp(H * scale, 1e-6, 1e6);
+      ctx2.fillStyle = 'rgba(234, 67, 53, 0.30)';
+      ctx2.strokeStyle = getColor('accent-red');
+      ctx2.fillRect(-W / 2, -Hs / 2, W, Hs);
+      ctx2.strokeRect(-W / 2, -Hs / 2, W, Hs);
+
+      // labels
+      ctx2.fillStyle = getColor('text-primary');
+      ctx2.font = '14px monospace';
+      ctx2.textAlign = 'center';
+      ctx2.fillText('ω', 0, -H / 2 - 18);
+      ctx2.fillText(`e^t · ω`, 0, -Hs / 2 - 18);
+
+      outVerif.innerHTML = `Pullback: <span class="value">(φᵗᴱ)*ω = ${scale.toFixed(3)} · ω</span> ✓`;
+
+    } else if (mode === 'contraction') {
+  // i_E(ω) = Θ — synchronized with left-panel scale e^t
+  // We read 't' and 'scale' earlier in draw(), so this stays in sync.
+  const outVerif = document.getElementById('verification-5');
+
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '14px monospace';
+  ctx2.textAlign = 'center';
+  ctx2.fillText('Contraction  i_E(ω) = Θ  at a fixed point', 0, -130);
+
+  // Fixed test point in this panel
+  const X = -40;
+  const Y = 10;
+
+  // Draw a fixed ω "tile" centered at (X, Y)
+  const a = 44; // tile side
+  ctx2.fillStyle = 'rgba(66,133,244,0.22)';
+  ctx2.strokeStyle = getColor('accent-blue');
+  ctx2.lineWidth = 2;
+  ctx2.fillRect(X - a/2, Y - a/2, a, a);
+  ctx2.strokeRect(X - a/2, Y - a/2, a, a);
+
+  // Arrow length proportional to e^t (same 'scale' used on the left)
+  // This keeps both panels breathing together.
+  const E_len = 24 * scale; // ↑ lengthens when e^t grows
+
+  // Yellow arrow: E = p ∂/∂p (vertical direction in (x,p) panel)
+  ctx2.strokeStyle = getColor('accent-yellow');
+  ctx2.lineWidth = 3;
+  ctx2.beginPath();
+  ctx2.moveTo(X, Y);
+  ctx2.lineTo(X, Y - E_len);
+  ctx2.stroke();
+  ctx2.save();
+  ctx2.translate(X, Y - E_len);
+  ctx2.beginPath();
+  ctx2.moveTo(0, 0);
+  ctx2.lineTo(-4, -6);
+  ctx2.lineTo(4, -6);
+  ctx2.closePath();
+  ctx2.fillStyle = getColor('accent-yellow');
+  ctx2.fill();
+  ctx2.restore();
+
+  // A small fixed dx arrow (visualizing the pairing p·dx)
+  const dxLen = 26;
+  ctx2.strokeStyle = getColor('accent-green');
+  ctx2.lineWidth = 2.5;
+  ctx2.beginPath();
+  ctx2.moveTo(X + 18, Y + 18);
+  ctx2.lineTo(X + 18 + dxLen, Y + 18);
+  ctx2.stroke();
+  ctx2.save();
+  ctx2.translate(X + 18 + dxLen, Y + 18);
+  ctx2.beginPath();
+  ctx2.moveTo(0, 0);
+  ctx2.lineTo(-5, 3);
+  ctx2.lineTo(-5, -3);
+  ctx2.closePath();
+  ctx2.fillStyle = getColor('accent-green');
+  ctx2.fill();
+  ctx2.restore();
+
+  // Caption + verification text
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '12px monospace';
+  ctx2.fillText('E vertical;   Θ = p · dx', 0, 108);
+
+  outVerif.innerHTML = `Contraction: <span class="value">i_E(ω) = Θ</span> ✓`;
+
+
+    } else if (mode === 'liouville') {
+  // ℒ_E ω = ω — pulse the equality to suggest “unchanged”
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '14px monospace';
+  ctx2.textAlign = 'center';
+  ctx2.fillText('Lie derivative of ω along E', 0, -120);
+
+  const S = 65;
+  ctx2.strokeStyle = getColor('accent-blue');
+  ctx2.lineWidth = 2;
+  ctx2.strokeRect(-S, -18, 2 * S, 36);
+
+  // gentle alpha pulse
+  const alpha = 0.6 + 0.35 * Math.sin(Date.now() / 600);
+  ctx2.globalAlpha = alpha;
+  ctx2.fillStyle = getColor('accent-green');
+  ctx2.font = 'bold 20px monospace';
+  ctx2.fillText('ℒ_E(ω) = ω', 0, 8);
+  ctx2.globalAlpha = 1;
+
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '12px monospace';
+  ctx2.fillText('Cartan: ℒ_E = d∘i_E + i_E∘d;  i_E(ω)=Θ,  dΘ=ω', 0, 60);
+
+  outVerif.innerHTML = `Lie derivative: <span class="value">ℒ_E ω = ω</span> ✓`;
+
+
+    } else if (mode === 'coordinate') {
+  // E has the same form in any canonical coordinates:
+  // E = Σ p_i ∂/∂p_i  =  Σ p̃_i ∂/∂p̃_i
+  // Tie rotation to the same time param t so it animates only when Animate is on.
+  const theta = 1.2 * t; // radians
+
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '14px monospace';
+  ctx2.textAlign = 'center';
+  ctx2.fillText('Coordinate invariance of E', 0, -130);
+
+  // Original axes (blue)
+  ctx2.strokeStyle = getColor('accent-blue');
+  ctx2.lineWidth = 2;
+  ctx2.beginPath(); ctx2.moveTo(-140, 0); ctx2.lineTo(140, 0); ctx2.stroke();
+  ctx2.beginPath(); ctx2.moveTo(0, -140); ctx2.lineTo(0, 140); ctx2.stroke();
+
+  // Rotated axes (red)
+  ctx2.save();
+  ctx2.rotate(theta);
+  ctx2.strokeStyle = getColor('accent-red');
+  ctx2.lineWidth = 2;
+  ctx2.beginPath(); ctx2.moveTo(-140, 0); ctx2.lineTo(140, 0); ctx2.stroke();
+  ctx2.beginPath(); ctx2.moveTo(0, -140); ctx2.lineTo(0, 140); ctx2.stroke();
+  ctx2.restore();
+
+  // Show a momentum vector in each frame with the same magnitude
+  const pLen = 70;
+
+  // In original frame, draw p along +p-axis
+  ctx2.strokeStyle = getColor('accent-blue');
+  ctx2.lineWidth = 3;
+  ctx2.beginPath();
+  ctx2.moveTo(0, 0);
+  ctx2.lineTo(0, -pLen);
+  ctx2.stroke();
+
+  // In rotated frame, draw p̃ along +p̃-axis
+  ctx2.save();
+  ctx2.rotate(theta);
+  ctx2.strokeStyle = getColor('accent-red');
+  ctx2.lineWidth = 3;
+  ctx2.beginPath();
+  ctx2.moveTo(0, 0);
+  ctx2.lineTo(0, -pLen);
+  ctx2.stroke();
+  ctx2.restore();
+
+  // Labels
+  ctx2.fillStyle = getColor('text-primary');
+  ctx2.font = '12px monospace';
+  ctx2.fillText('p-axis', -48, -8);
+  ctx2.save();
+  ctx2.rotate(theta);
+  ctx2.fillText('p̃-axis', -48, -8);
+  ctx2.restore();
+
+  // Caption
+  ctx2.font = '12px monospace';
+  ctx2.fillText('E = Σ p_i ∂/∂p_i  =  Σ p̃_i ∂/∂p̃_i  (same form)', 0, 118);
+
+  // Verification message (use the element id you already have)
+  document.getElementById('verification-5').innerHTML =
+    `E form: <span class="value">invariant</span> (axes rotating)`;
+}
+
+
+    ctx2.restore();
+
+    if (isAnimating) requestAnimationFrame(draw);
+  }
+
+  // helpers
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function drawAxes(ctx) {
+    ctx.beginPath(); ctx.moveTo(-150, 0); ctx.lineTo(150, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -150); ctx.lineTo(0, 150); ctx.stroke();
+  }
+
+  // events
+  btnAnim.addEventListener('click', () => {
+    isAnimating = !isAnimating;
+    btnAnim.textContent = isAnimating ? 'Stop' : 'Animate Flow';
+    btnAnim.classList.toggle('active', isAnimating);
+    if (isAnimating) draw();
+  });
+
+  sliderT.addEventListener('input', () => {
+    if (!isAnimating) draw();
+  });
+
+  modeSel.addEventListener('change', () => {
+    draw();
+  });
+
+  // initial render
+  draw();
+})();
     </script>
 </body>
 </html>
