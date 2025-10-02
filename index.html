@@ -1594,34 +1594,55 @@ ctx2.stroke();
             ctx1.fill();
         }
         
-        // Calculate divergence numerically: div(X_H) = ∂(∂H/∂p)/∂x + ∂(-∂H/∂x)/∂p
-        function calculateDivergence(system, x, p) {
-            if (system === 'harmonic') {
-                // X_H = p∂_x - x∂_p → div = ∂(p)/∂x + ∂(-x)/∂p = 0 + 0 = 0
-                return 0;
-            } else if (system === 'anharmonic') {
-                // X_H = p∂_x - x³∂_p → div = ∂(p)/∂x + ∂(-x³)/∂p = 0 + 0 = 0  
-                return 0;
-            } else if (system === 'pendulum') {
-                // X_H = p∂_x - sin(x)∂_p → div = ∂(p)/∂x + ∂(-sin(x))/∂p = 0 + 0 = 0
-                return 0;
-            }
-            return 0;
-        }
+        // Numerical divergence of the Hamiltonian vector field at physical (x,p)
+// div(X_H) = ∂/∂x ( ∂H/∂p ) + ∂/∂p ( -∂H/∂x )
+        function dHdx(system, x, p){
+  if (system === 'harmonic')   return x;           // V = ½ x^2
+  if (system === 'anharmonic') return x*x*x;       // V = ¼ x^4
+  if (system === 'pendulum')   return Math.sin(x); // V = 1 - cos x (const shift irrelevant)
+  return 0;
+}
+function dHdp(system, x, p){
+  // T(p) = ½ p^2 in all demos
+  return p;
+}
+
+// Hamiltonian vector field components: X_H = ( dH/dp,  -dH/dx )
+function X_H(system, x, p){
+  return { Xx: dHdp(system, x, p), Xp: -dHdx(system, x, p) };
+}
+
+// Numerical divergence: div X_H = ∂Xx/∂x + ∂Xp/∂p (centered differences)
+function calculateDivergence(system, x_phys, p_phys){
+  const eps = 1e-6;  // in physical units
+
+  // ∂Xx/∂x at (x,p)
+  const Xx_plus  = X_H(system, x_phys + eps, p_phys).Xx;
+  const Xx_minus = X_H(system, x_phys - eps, p_phys).Xx;
+  const dXx_dx   = (Xx_plus - Xx_minus) / (2*eps);
+
+  // ∂Xp/∂p at (x,p)
+  const Xp_plus  = X_H(system, x_phys, p_phys + eps).Xp;
+  const Xp_minus = X_H(system, x_phys, p_phys - eps).Xp;
+  const dXp_dp   = (Xp_plus - Xp_minus) / (2*eps);
+
+  return dXx_dx + dXp_dp;
+}
 
         // Compute max divergence across sample points
-        let maxDiv = 0;
-        for (let i = -8; i <= 8; i += 4) {
-            for (let j = -8; j <= 8; j += 4) {
-                const x = i * 20;
-                const p = j * 20;
-                const div = calculateDivergence(system, x, p);
-                maxDiv = Math.max(maxDiv, Math.abs(div));
-            }
-        }
-        
-        document.getElementById('delta-h').textContent = maxDeltaH.toFixed(6);
-        document.getElementById('div-xh').textContent = maxDiv.toFixed(6);
+         let maxDiv = 0;
+for (let i = -8; i <= 8; i += 4) {
+  for (let j = -8; j <= 8; j += 4) {
+    
+    const x_phys = (i * 20) / 60;
+    const p_phys = (j * 20) / 60;
+
+    const div = calculateDivergence(system, x_phys, p_phys);
+    maxDiv = Math.max(maxDiv, Math.abs(div));
+  }
+}
+//small nonzero due to float/FD error
+document.getElementById('div-xh').textContent = maxDiv.toExponential(3);
         
         ctx1.restore();
         
