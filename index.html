@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Geometry of Phase Space | An Interactive Journey Through T*Q</title>
     
-    <!-- KaTeX for beautiful math rendering -->
+    <!-- KaTeX for math rendering -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
@@ -220,7 +220,7 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Visualization containers */
+        /* Visualisation containers */
         .viz-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -386,7 +386,7 @@
         }
     </style>
 <style>
-  /* Part 4 clean layout */
+  /* Part 4 layout */
   #pb4 #pb4-geo { height: 420px; }
   #pb4 #pb4-vectors { height: 300px; }
 
@@ -596,7 +596,7 @@
 </div>
         </div>
 
-        <!-- Section 3: Hamiltonian Vector Fields - COMPLETELY REDONE -->
+        <!-- Section 3: Hamiltonian Vector Fields -->
 <div class="section" data-section-id="3">
     <div class="section-header">
         <span class="section-number">3</span>
@@ -741,7 +741,7 @@
 </div>
 
 
- <!-- ======== PART 4 (clean rebuild) ======== -->
+ <!-- ======== PART 4 ======== -->
 <div class="viz-container" id="pb4">
   <!-- LEFT: geometry -->
   <div class="viz-panel">
@@ -1153,7 +1153,7 @@ ctx2.stroke();
     return mat(sigma*c, -sigma*s, sigma*s, sigma*c);
   }
   function draw() {
-    // read your existing sliders (unchanged UI)
+    
     const angle = parseFloat(document.getElementById('ctrl-2-angle').value) * Math.PI / 180;
     const phase = parseFloat(document.getElementById('ctrl-2-phase').value);
 
@@ -1168,7 +1168,7 @@ ctx2.stroke();
     ctx1.clearRect(0, 0, w1, h1);
     ctx2.clearRect(0, 0, w2, h2);
 
-    // ---------- LEFT PANEL (unchanged): Θ acting on vectors ----------
+    // ---------- LEFT PANEL: Θ acting on vectors ----------
     ctx1.save();
     ctx1.translate(w1/2, h1/2);
 
@@ -1187,7 +1187,7 @@ ctx2.stroke();
     }
 
     const x = phase * 2 - 100;   // [-100,100]
-    const p = 80;                 // momentum magnitude (your existing scale)
+    const p = 80;                 // momentum magnitude
     ctx1.fillStyle = getColor('accent-yellow');
     ctx1.beginPath(); ctx1.arc(x, -p, 6, 0, 2*Math.PI); ctx1.fill();
 
@@ -1221,7 +1221,7 @@ ctx2.stroke();
     ctx1.fillText('π_*V',  x + vx + 10, 105);
     ctx1.fillText('Q', -175, 95);
 
-    // your original Θ(V) readout (kept consistent with your scaling)
+    // original Θ(V) readout (consistent with scaling)
     const thetaLeft = (p * vx) / 100;
     document.getElementById('theta-result').textContent = thetaLeft.toFixed(3);
 
@@ -1259,7 +1259,7 @@ ctx2.stroke();
     ctx2.fillText('x̃¹', 150*Je1[0] + 5, -150*Je1[1] + 5);
     ctx2.fillText('x̃²', 150*Je2[0] + 5, -150*Je2[1] + 5);
 
-    // choose the same data you used on the left (same units so numbers match your Θ(V) display):
+    // same data as the left (same units so numbers match Θ(V) display):
     // covector components p = (p, 0), projected vector π_*V = (vx, 0)
     const pVec = [p, 0];
     const dxVec = [vx, 0];
@@ -1311,7 +1311,7 @@ ctx2.stroke();
   draw();
 })();
 
-        // Part 3: COMPLETELY NEW IMPLEMENTATION
+        // Part 3: NEW IMPLEMENTATION
 (function() {
     const ctx1 = setupCanvas('viz-3a');
     const ctx2 = setupCanvas('viz-3b');
@@ -1872,7 +1872,7 @@ const areaRatio = area1 / area0;
       }
     }
 
-    // a few f-level hints for simple choices (quiet, non-intrusive)
+    // a few f-level hints for simple choices
     ctxGeo.strokeStyle = 'rgba(66,133,244,0.22)';
     if(F===LIB.Hx){
       for(let E=0.5;E<=3;E+=0.5){
@@ -1906,7 +1906,7 @@ const areaRatio = area1 / area0;
     ctxVec.clearRect(0,0,w,h);
     ctxVec.save(); ctxVec.translate(w/2, h/2);
 
-    // neat background disk (gives focus, no text)
+    // background disk
     ctxVec.beginPath();
     ctxVec.arc(0,0,110,0,2*Math.PI);
     ctxVec.fillStyle = 'rgba(255,255,255,0.035)';
@@ -1920,7 +1920,7 @@ const areaRatio = area1 / area0;
     const sign = useAssignmentSign ? -1 : +1; // assignment ⇒ minus
     const Xlie = { x: sign*Lbr.x, p: sign*Lbr.p };
 
-    // arrow drawer (no labels on canvas)
+    // arrow drawer
     function drawArrow(vx,vp,len,strokeStyle){
       const m = Math.hypot(vx,vp)||1; const ux=vx/m, up=vp/m;
       ctxVec.strokeStyle = strokeStyle; ctxVec.lineWidth = 3;
@@ -1999,7 +1999,7 @@ const areaRatio = area1 / area0;
   draw();
 })();
 
-        // Part 5: Euler–Liouville Field (polished JS; exact IDs preserved)
+        // Part 5: Euler–Liouville Field
 (function () {
   const ctx1 = setupCanvas('viz-5a');
   const ctx2 = setupCanvas('viz-5b');
@@ -2168,9 +2168,7 @@ const areaRatio = area1 / area0;
   ctx2.lineWidth = 2;
   ctx2.fillRect(X - a/2, Y - a/2, a, a);
   ctx2.strokeRect(X - a/2, Y - a/2, a, a);
-
-  // Arrow length proportional to e^t (same 'scale' used on the left)
-  // This keeps both panels breathing together.
+  
   const E_len = 24 * scale; // ↑ lengthens when e^t grows
 
   // Yellow arrow: E = p ∂/∂p (vertical direction in (x,p) panel)
@@ -2191,7 +2189,7 @@ const areaRatio = area1 / area0;
   ctx2.fill();
   ctx2.restore();
 
-  // A small fixed dx arrow (visualizing the pairing p·dx)
+  // A small fixed dx arrow (visualising the pairing p·dx)
   const dxLen = 26;
   ctx2.strokeStyle = getColor('accent-green');
   ctx2.lineWidth = 2.5;
@@ -2219,7 +2217,7 @@ const areaRatio = area1 / area0;
 
 
     } else if (mode === 'liouville') {
-  // ℒ_E ω = ω — pulse the equality to suggest “unchanged”
+  // ℒ_E ω = ω 
   ctx2.fillStyle = getColor('text-primary');
   ctx2.font = '14px monospace';
   ctx2.textAlign = 'center';
@@ -2306,7 +2304,7 @@ const areaRatio = area1 / area0;
   ctx2.font = '12px monospace';
   ctx2.fillText('E = Σ p_i ∂/∂p_i  =  Σ p̃_i ∂/∂p̃_i  (same form)', 0, 118);
 
-  // Verification message (use the element id you already have)
+  // Verification message
   document.getElementById('verification-5').innerHTML =
     `E form: <span class="value">invariant</span> (axes rotating)`;
 }
